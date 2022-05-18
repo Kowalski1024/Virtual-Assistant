@@ -1,17 +1,26 @@
+from pynput import keyboard
 
 
 class KeyListener:
-    def __init__(self):
-        raise NotImplementedError
+    def __init__(self, func):
+        self._listener = keyboard.Listener(on_press=self._on_press, on_release=self._on_release)
+        self._pressed = set()
+        self._keys = {keyboard.Key.ctrl, keyboard.Key.cmd, keyboard.KeyCode(char="w")}
+        self._func = func
 
     def start(self):
-        raise NotImplementedError
+        self._listener.start()
 
     def stop(self):
-        raise NotImplementedError
+        if self._listener.is_alive():
+            self._listener.stop()
+            self._listener.join()
 
-    def _on_press(self):
-        raise NotImplementedError
+    def _on_press(self, key):
+        self._pressed.add(key)
+        if self._keys.issubset(self._pressed):
+            self._func()
 
-    def _on_release(self):
-        raise NotImplementedError
+    def _on_release(self, key):
+        if key in self._pressed:
+            self._pressed.remove(key)
