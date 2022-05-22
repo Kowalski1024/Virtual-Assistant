@@ -7,6 +7,8 @@ class ResponseType(enum.Enum):
     TEXT_RESPONSE = 200
     FAIL_MATCH = 300
     SKILL_FAIL = 301
+    SPEECH_FAIL = 302
+    SPEECH_ERROR = 303
 
 
 class FontStyles(enum.Enum):
