@@ -24,6 +24,11 @@ class Connection:
         return data.message
 
     def recv_from_speech(self):
-        self._pipe.send(Response(ResponseType.WAITING_FOR_SPEECH_INPUT))
-        data: Response = self._pipe.recv()
+        while True:
+            self._pipe.send(Response(ResponseType.WAITING_FOR_SPEECH_INPUT))
+            data: Response = self._pipe.recv()
+            if data.type == ResponseType.TEXT_RESPONSE:
+                break
+            else:
+                self.send(data.type, data.message)
         return data.message
