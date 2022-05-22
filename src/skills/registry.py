@@ -2,45 +2,40 @@ import enum
 from .collection import *
 
 
-class Command(enum.Enum):
+class CMD(enum.Enum):
     TAGS = 0
     FUNC = 1
     CLASS = 2
 
 
-COMMANDS = [
+assistant_commands = [
     {
-        Command.TAGS: 'wikipedia',
-        Command.FUNC: 'wikipedia',
-        Command.CLASS: BrowserSkills
+        CMD.TAGS: 'wikipedia',
+        CMD.FUNC: 'wikipedia',
+        CMD.CLASS: BrowserSkills
     },
 
     {
-        Command.TAGS: 'show calendar',
-        Command.FUNC: None,
+        CMD.TAGS: 'open',
+        CMD.FUNC: 'open_website_in_browser',
+        CMD.CLASS: BrowserSkills
     },
 
     {
-        Command.TAGS: 'open',
-        Command.FUNC: 'open_website_in_browser',
-        Command.CLASS: BrowserSkills
+        CMD.TAGS: 'search',
+        CMD.FUNC: 'search_in_google',
+        CMD.CLASS: BrowserSkills
     },
 
     {
-        Command.TAGS: 'search',
-        Command.FUNC: 'search_in_google',
-        Command.CLASS: BrowserSkills
+        CMD.TAGS: 'weather',
+        CMD.FUNC: 'run',
+        CMD.CLASS: WeatherSkills
     },
 
     {
-        Command.TAGS: 'weather',
-        Command.FUNC: 'run',
-        Command.CLASS: WeatherSkills
-    },
-
-    {
-        Command.TAGS: 'remind',
-        Command.FUNC: 'create_reminder',
-        Command.CLASS: ReminderSkills
+        CMD.TAGS: 'remind',
+        CMD.FUNC: 'create_reminder',
+        CMD.CLASS: ReminderSkills
     }
 ]
