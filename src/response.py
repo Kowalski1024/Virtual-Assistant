@@ -1,8 +1,8 @@
 from typing import Optional
 from multiprocessing import connection
-
 from dataclasses import dataclass
-from enumerations import ResponseType, FontStyles
+
+from .enumerations import ResponseType, FontStyles
 
 
 @dataclass
