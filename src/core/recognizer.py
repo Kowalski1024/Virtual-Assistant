@@ -21,9 +21,9 @@ class Recognizer(Connection):
         try:
             text = self._recognizer.recognize_google(audio_data=audio)
             self.send(ResponseType.TEXT_RESPONSE, text)
-        except sr.UnknownValueError:
+        except sr.UnknownValueError as e:
             # Google Speech Recognition could not understand audio
-            self.send(ResponseType.SPEECH_FAIL)
+            self.send(ResponseType.SPEECH_FAIL, str(e))
         except sr.RequestError as e:
             # Could not request results from Google Speech Recognition service
             self.send(ResponseType.SPEECH_ERROR, str(e))
