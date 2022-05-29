@@ -18,10 +18,7 @@ class Recognizer(Connection):
     def _get_input(self) -> sr.AudioData:
         with sr.Microphone() as source:
             print('ready')
-            try:
-                audio = self._recognizer.listen(source, timeout=1)
-            except sr.WaitTimeoutError:
-                print('timeout')
+            audio = self._recognizer.listen(source)
             print('end')
         return audio
 
