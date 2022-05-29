@@ -12,8 +12,7 @@ class ResponseType(enum.Enum):
 
 
 class FontStyles(enum.Enum):
-    pass
+    TITLE = 'Verdana', 12, 'bold', 'italic'
+    BOLD = 'Verdana', 8, 'bold'
+    NORMAL = 'Verdana', 8
 
-
-class Colors(enum.Enum):
-    pass
