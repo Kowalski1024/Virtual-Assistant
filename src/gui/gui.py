@@ -20,6 +20,9 @@ class GUI(tk.Tk):
         self._prepare_interface()
         self.mainloop()
 
+    def write(self, text, font):
+        self.response_window.scrollable_frame.add_text(text, font)
+
     def on_quit(self):
         print('Good bye')
         self.destroy()
