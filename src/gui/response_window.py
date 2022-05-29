@@ -1,25 +1,60 @@
 import tkinter as tk
 
+from . import InputFrame, ScrollableTextFrame
+from .. import Colors
+
 
 class ResponseWindow(tk.Frame):
-    def __init__(self, **kw):
-        super().__init__(**kw)
-        raise NotImplementedError
+    def __init__(self, parent: tk.Tk, pipe):
+        super().__init__(parent)
+        self.container = tk.Frame(self, bg=Colors.DGRAY, highlightthickness=0)
+        self.scrollable_frame = ScrollableTextFrame(self.container, bg=Colors.DGRAY, highlightthickness=0)
+        self.input_frame = InputFrame(pipe, self.container, bg=Colors.DGRAY, highlightthickness=0)
+        self.title_bar = tk.Frame(self, bg=Colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
+        self.title_bar_title = tk.Label(self.title_bar, text='', bg=Colors.RGRAY, bd=0, fg='white',
+                                        font=("helvetica", 10),
+                                        highlightthickness=0)
+        self.close_button = tk.Button(self.title_bar, text='  ×  ', command=self.hide, bg=Colors.RGRAY, padx=2,
+                                      pady=2,
+                                      font=("calibri", 13), bd=0, fg='white', highlightthickness=0)
+        self.resize_x_widget = tk.Frame(self.master, bg=Colors.DGRAY, cursor='sb_h_double_arrow')
+        self.resize_y_widget = tk.Frame(self.master, bg=Colors.DGRAY, cursor='sb_v_double_arrow')
+        self._prepare()
 
-    def switch_type(self):
-        raise NotImplementedError
+    def show_input_frame(self):
+        self.input_frame.tkraise()
+        self.show()
+
+    def show_scrollable_frame(self):
+        self.scrollable_frame.tkraise()
+        self.show()
 
     def hide(self):
-        raise NotImplementedError
+        self.master.withdraw()
 
     def show(self):
-        raise NotImplementedError
+        self.master.deiconify()
 
     def _on_resize(self, event):
         raise NotImplementedError
 
-    def _return_x_on_hovering(self, event):
-        raise NotImplementedError
+    def _change_x_on_hovering(self, event):
+        self.close_button['bg'] = 'red'
 
-    def _prepare(self, event):
-        raise NotImplementedError
+    def _return_x_to_normal_state(self, event):
+        self.close_button['bg'] = Colors.RGRAY
+
+    def _prepare(self):
+        self.title_bar.pack(fill=tk.X)
+        self.close_button.pack(side=tk.RIGHT, ipadx=7, ipady=1)
+        self.title_bar_title.pack(side=tk.LEFT, padx=10)
+        self.resize_x_widget.pack(side=tk.RIGHT, ipadx=2, fill=tk.Y)
+        self.resize_y_widget.pack(side=tk.BOTTOM, ipadx=2, fill=tk.X)
+        self.container.pack(expand=1, fill=tk.BOTH)
+        self.container.grid_rowconfigure(0, weight=1)
+        self.container.grid_columnconfigure(0, weight=1)
+        self.close_button.bind('<Enter>', self._change_x_on_hovering)
+        self.close_button.bind('<Leave>', self._return_x_to_normal_state)
+        self.pack(side="top", fill="both", expand=True)
+        self.scrollable_frame.grid(row=0, column=0, sticky="nsew")
+        self.input_frame.grid(row=0, column=0, sticky="nsew")
