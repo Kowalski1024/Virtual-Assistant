@@ -1,24 +1,25 @@
 import tkinter as tk
 
-from . import InputFrame, ScrollableTextFrame
-from .. import Colors
+from .input_frame import InputFrame
+from .scrollable_text_frame import ScrollableTextFrame
+from . import colors
 
 
 class ResponseWindow(tk.Frame):
     def __init__(self, parent: tk.Tk, pipe):
         super().__init__(parent)
-        self.container = tk.Frame(self, bg=Colors.DGRAY, highlightthickness=0)
-        self.scrollable_frame = ScrollableTextFrame(self.container, bg=Colors.DGRAY, highlightthickness=0)
-        self.input_frame = InputFrame(pipe, self.container, bg=Colors.DGRAY, highlightthickness=0)
-        self.title_bar = tk.Frame(self, bg=Colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
-        self.title_bar_title = tk.Label(self.title_bar, text='', bg=Colors.RGRAY, bd=0, fg='white',
+        self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0)
+        self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
+        self.input_frame = InputFrame(pipe, self.container, bg=colors.DGRAY, highlightthickness=0)
+        self.title_bar = tk.Frame(self, bg=colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
+        self.title_bar_title = tk.Label(self.title_bar, text='', bg=colors.RGRAY, bd=0, fg='white',
                                         font=("helvetica", 10),
                                         highlightthickness=0)
-        self.close_button = tk.Button(self.title_bar, text='  ×  ', command=self.hide, bg=Colors.RGRAY, padx=2,
+        self.close_button = tk.Button(self.title_bar, text='  ×  ', command=self.hide, bg=colors.RGRAY, padx=2,
                                       pady=2,
                                       font=("calibri", 13), bd=0, fg='white', highlightthickness=0)
-        self.resize_x_widget = tk.Frame(self.master, bg=Colors.DGRAY, cursor='sb_h_double_arrow')
-        self.resize_y_widget = tk.Frame(self.master, bg=Colors.DGRAY, cursor='sb_v_double_arrow')
+        self.resize_x_widget = tk.Frame(self.master, bg=colors.DGRAY, cursor='sb_h_double_arrow')
+        self.resize_y_widget = tk.Frame(self.master, bg=colors.DGRAY, cursor='sb_v_double_arrow')
         self._prepare()
 
     def show_input_frame(self):
@@ -42,7 +43,7 @@ class ResponseWindow(tk.Frame):
         self.close_button['bg'] = 'red'
 
     def _return_x_to_normal_state(self, event):
-        self.close_button['bg'] = Colors.RGRAY
+        self.close_button['bg'] = colors.RGRAY
 
     def _prepare(self):
         self.title_bar.pack(fill=tk.X)
