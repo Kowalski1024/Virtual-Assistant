@@ -35,11 +35,12 @@ class Assistant:
             self._skill_matching_process.start()
 
     def _run_recognizer(self):
-        if not self._speech_recognizer_process.is_alive():
-            self._speech_recognizer_process = Process(target=self._recognizer.run,
-                                                      args=(self.parent_connection,),
-                                                      daemon=True)
-            self._speech_recognizer_process.start()
+        if self._speech_recognizer_process.is_alive():
+            self._speech_recognizer_process.terminate()
+        self._speech_recognizer_process = Process(target=self._recognizer.run,
+                                                 args=(self.parent_connection,),
+                                                 daemon=True)
+        self._speech_recognizer_process.start()
 
     @property
     def parent_connection(self) -> connection:
