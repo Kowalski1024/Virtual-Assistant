@@ -6,9 +6,8 @@ from playsound import playsound
 from gtts import gTTS
 
 
-SOUND_READY = '../files/ready.wav'
-SOUND_TEMP = '../files/temp.mp3'
-
+SOUND_READY = 'files/ready.wav'
+SOUND_TEMP = 'files/temp.mp3'
 
 if not exists(SOUND_TEMP):
     with open(SOUND_TEMP, 'x') as f:

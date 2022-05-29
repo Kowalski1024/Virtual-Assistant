@@ -5,7 +5,7 @@ import tkinter as tk
 from .response_window import ResponseWindow
 
 
-ICON_PATH = "src/files/icon_circle.ico"
+ICON_PATH = "files/icon_circle.ico"
 
 
 class GUI(tk.Tk):
@@ -22,7 +22,7 @@ class GUI(tk.Tk):
 
     def on_quit(self):
         print('Good bye')
-        self.root.destroy()
+        self.destroy()
 
     def _prepare_interface(self):
         self.overrideredirect(True)
