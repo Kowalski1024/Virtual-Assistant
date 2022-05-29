@@ -1,6 +1,6 @@
 from queue import Queue
-from threading import Thread
-from os.path import exists
+from threading import Thread, Lock
+import os
 
 from playsound import playsound
 from gtts import gTTS
@@ -9,13 +9,10 @@ from gtts import gTTS
 SOUND_READY = 'files/ready.wav'
 SOUND_TEMP = 'files/temp.mp3'
 
-if not exists(SOUND_TEMP):
-    with open(SOUND_TEMP, 'x') as f:
-        pass
-
 
 class Speaker:
-    def __init__(self):
+    def __init__(self, lock: Lock):
+        self._lock = lock
         self._message_queue = Queue(maxsize=5)
         self._thread = Thread(target=self._run_speech_engine)
         self._stop_speaker = False
@@ -30,13 +27,16 @@ class Speaker:
         while not self._message_queue.empty():
             message = self._message_queue.get()
             if message:
-                batches = self._create_text_batches(raw_text=message)
-                for batch in batches:
-                    gTTS(batch).save(SOUND_TEMP)
-                    playsound(SOUND_TEMP)
-                    if self._stop_speaker:
-                        self._stop_speaker = False
-                        break
+                with self._lock:
+                    batches = self._create_text_batches(raw_text=message)
+                    for batch in batches:
+                        with open(SOUND_TEMP, 'x') as f:
+                            gTTS(batch).write_to_fp(f)
+                        playsound(SOUND_TEMP)
+                        if self._stop_speaker:
+                            self._stop_speaker = False
+                            break
+                        os.remove(SOUND_TEMP)
 
     def stop_speaker(self):
         if self._thread.is_alive():

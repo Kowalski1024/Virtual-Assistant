@@ -1,20 +1,28 @@
 import speech_recognition as sr
-from multiprocessing import connection
+from multiprocessing import connection, Lock
 
 from src.response import Connection, ResponseType
 
 
 class Recognizer(Connection):
-    def __init__(self, pipe: connection):
+    def __init__(self, pipe: connection, lock: Lock):
         super().__init__(pipe)
+        self._lock = lock
         self._recognizer = sr.Recognizer()
 
     def run(self):
-        self._speech_to_text(self._get_input())
+        while True:
+            self._lock.acquire()
+            self._speech_to_text(self._get_input())
 
     def _get_input(self) -> sr.AudioData:
         with sr.Microphone() as source:
-            audio = self._recognizer.listen(source)
+            print('ready')
+            try:
+                audio = self._recognizer.listen(source, timeout=1)
+            except sr.WaitTimeoutError:
+                print('timeout')
+            print('end')
         return audio
 
     def _speech_to_text(self, audio: sr.AudioData):

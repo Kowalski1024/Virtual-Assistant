@@ -9,8 +9,8 @@ class ResponseWindow(tk.Frame):
     def __init__(self, parent: tk.Tk, pipe):
         super().__init__(parent)
         self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0)
-        self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
         self.input_frame = InputFrame(pipe, self.container, bg=colors.DGRAY, highlightthickness=0)
+        self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
         self.title_bar = tk.Frame(self, bg=colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
         self.title_bar_title = tk.Label(self.title_bar, text='', bg=colors.RGRAY, bd=0, fg='white',
                                         font=("helvetica", 10),

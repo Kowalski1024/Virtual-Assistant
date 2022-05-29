@@ -5,7 +5,7 @@ class KeyListener:
     def __init__(self, func):
         self._listener = keyboard.Listener(on_press=self._on_press, on_release=self._on_release)
         self._pressed = set()
-        self._keys = {keyboard.Key.ctrl, keyboard.Key.cmd, keyboard.KeyCode(char="w")}
+        self._keys = {keyboard.Key.cmd, keyboard.KeyCode(char="w")}
         self._func = func
 
     def start(self):
