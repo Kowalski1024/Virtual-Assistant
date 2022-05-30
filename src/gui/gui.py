@@ -20,8 +20,18 @@ class GUI(tk.Tk):
         self._prepare_interface()
         self.mainloop()
 
-    def write(self, text, font):
-        self.response_window.scrollable_frame.add_text(text, font)
+    def clear(self):
+        self.response_window.scrollable_frame.clear()
+        self.response_window.input_frame.clear()
+
+    def write(self, text, font, clear=0):
+        """
+        :param text: text to be added
+        :param font: text font style
+        :param clear: 0 - do not clear, 1 - clear before printing, 2 - clear before next printing
+        :return: None
+        """
+        self.response_window.scrollable_frame.add_text(text, font, clear)
 
     def get_text_input(self):
         self.response_window.show_input_frame()

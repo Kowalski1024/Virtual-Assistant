@@ -32,7 +32,7 @@ class Assistant:
         self._skill_matching = ProcessTuple(SkillMatching(self.child_connection))
         self._recognizer = ProcessTuple(Recognizer(self.parent_connection)).run()
         self._graphical_interface = GUI(self.parent_connection)
-        self.response_type = True
+        self.response_type = False
 
     def run(self):
         self._key_listener.start()
@@ -43,6 +43,7 @@ class Assistant:
         self.close_connection()
 
     def wake_up(self):
+        self._graphical_interface.clear()
         self._skill_matching.run()
 
     @property
@@ -62,17 +63,17 @@ class Assistant:
         self._pipe_connection[1].close()
 
     def _response(self):
-        def response_by_type(d):
+        def response_by_type(d, clear=0):
             if self.response_type:
                 self._speaker.response_in_speech(d.message)
             else:
-                self._graphical_interface.write(d.message, d.font)
+                self._graphical_interface.write(d.message, d.font, clear)
 
         if self.parent_connection.poll():
             data: Response = self.parent_connection.recv()
             if data.type == ResponseType.WAITING_FOR_SPEECH_INPUT:
                 if data.message:
-                    response_by_type(data)
+                    response_by_type(data, 2)
                 with self._speaker.lock:
                     self._recognizer.obj.lock.release()
                     self._speaker.assistant_ready()

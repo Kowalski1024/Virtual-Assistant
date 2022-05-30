@@ -14,12 +14,18 @@ class ScrollableTextFrame(tk.Frame):
         scrollb = tk.Scrollbar(self, command=self.txt.yview)
         scrollb.grid(row=0, column=1, sticky=tk.NSEW)
         self.txt['yscrollcommand'] = scrollb.set
+        self._clear_flag = False
         self._prepare_fonts()
 
     def clear(self):
-        self.txt.delete(1, tk.END)
+        self.txt.delete(1.0, tk.END)
 
-    def add_text(self, text: str, font: FontStyles):
+    def add_text(self, text: str, font: FontStyles, clear):
+        if clear == 1 or self._clear_flag:
+            self.clear()
+            self._clear_flag = False
+        elif clear == 2:
+            self._clear_flag = clear
         self.txt.insert(tk.END, text+"\n", font)
 
     def _prepare_fonts(self):
