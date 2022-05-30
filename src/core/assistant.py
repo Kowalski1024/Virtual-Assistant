@@ -71,6 +71,8 @@ class Assistant:
         if self.parent_connection.poll():
             data: Response = self.parent_connection.recv()
             if data.type == ResponseType.WAITING_FOR_SPEECH_INPUT:
+                if data.message:
+                    response_by_type(data)
                 with self._speaker.lock:
                     self._recognizer.obj.lock.release()
                     self._speaker.assistant_ready()
