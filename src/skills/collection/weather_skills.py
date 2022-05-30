@@ -16,17 +16,14 @@ class WeatherSkills(Connection):
         client = python_weather.Client()
         city = self.recv_from_speech()
 
-        if city not in (ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR):
-            try:
-                weather = await client.find(city)
-            except Exception as e:
-                self.send(ResponseType.SKILL_FAIL, 'City not found', FontStyles.NORMAL)
-                await client.close()
-
-            message = self._format_message(weather)
-            self.send(ResponseType.TEXT_RESPONSE, message, FontStyles.NORMAL)
-        else:
+        try:
+            weather = await client.find(city)
+        except Exception as e:
             self.send(ResponseType.SKILL_FAIL, 'City not found', FontStyles.NORMAL)
+            await client.close()
+
+        message = self._format_message(weather)
+        self.send(ResponseType.TEXT_RESPONSE, message, FontStyles.NORMAL)
 
         await client.close()
 
