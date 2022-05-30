@@ -24,7 +24,7 @@ class BrowserSkills(Connection):
             except wikipedia.WikipediaException:
                 self.send(ResponseType.SKILL_FAIL, 'Cannot find given keyword', FontStyles.NORMAL)
         else:
-            self.send(ResponseType.TEXT_RESPONSE, 'Cannot find given keyword', FontStyles.NORMAL)
+            self.send(ResponseType.SKILL_FAIL, 'Invalid keyword', FontStyles.NORMAL)
 
 
     @staticmethod
