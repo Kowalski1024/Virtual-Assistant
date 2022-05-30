@@ -1,6 +1,10 @@
+import wikipedia
+
+from src.enumerations import FontStyles
+from src.response import ResponseType, Connection
 
 
-class BrowserSkills:
+class BrowserSkills(Connection):
     @staticmethod
     def search_on_google():
         raise NotImplementedError
@@ -9,9 +13,19 @@ class BrowserSkills:
     def open_website_in_browser():
         raise NotImplementedError
 
-    @staticmethod
-    def wiki_response():
-        raise NotImplementedError
+    def wikipedia(self):
+        keyword = self.recv_from_speech()
+
+        if keyword not in (ResponseType.SPEECH_ERROR, ResponseType.SPEECH_FAIL):
+            try:
+                page = wikipedia.page(keyword)
+                self.send(ResponseType.TEXT_RESPONSE, page.title, FontStyles.TITLE)
+                self.send(ResponseType.TEXT_RESPONSE, page.summary, FontStyles.NORMAL)
+            except wikipedia.WikipediaException:
+                self.send(ResponseType.SKILL_FAIL, 'Cannot find given keyword', FontStyles.NORMAL)
+        else:
+            self.send(ResponseType.TEXT_RESPONSE, 'Cannot find given keyword', FontStyles.NORMAL)
+
 
     @staticmethod
     def show_synonyms():
