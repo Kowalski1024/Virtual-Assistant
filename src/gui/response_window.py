@@ -1,4 +1,5 @@
 import tkinter as tk
+from tkinter import ttk
 
 from .input_frame import InputFrame
 from .scrollable_text_frame import ScrollableTextFrame
@@ -8,11 +9,14 @@ from .. import Response, ResponseType
 
 class ResponseWindow(tk.Frame):
     def __init__(self, parent: tk.Tk, pipe):
-        super().__init__(parent)
+        super().__init__(parent, bg=colors.RGRAY)
         self._pipe = pipe
-        self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0)
+
+        # styles
+        self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0, padx=4, pady=4)
         self.input_frame = InputFrame(self._send_input_text, self.container, bg=colors.DGRAY, highlightthickness=0)
         self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
+
         self.title_bar = tk.Frame(self, bg=colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
         self.title_bar_title = tk.Label(self.title_bar, text='', bg=colors.RGRAY, bd=0, fg='white',
                                         font=("helvetica", 10),
@@ -20,8 +24,8 @@ class ResponseWindow(tk.Frame):
         self.close_button = tk.Button(self.title_bar, text='  ×  ', command=self.hide, bg=colors.RGRAY, padx=2,
                                       pady=2,
                                       font=("calibri", 13), bd=0, fg='white', highlightthickness=0)
-        self.resize_x_widget = tk.Frame(self.master, bg=colors.DGRAY, cursor='sb_h_double_arrow')
-        self.resize_y_widget = tk.Frame(self.master, bg=colors.DGRAY, cursor='sb_v_double_arrow')
+
+        # pack widgets
         self._prepare()
 
     def show_input_frame(self):
@@ -44,24 +48,43 @@ class ResponseWindow(tk.Frame):
     def show(self):
         self.master.deiconify()
 
-    def _on_resize(self, event):
-        raise NotImplementedError
-
     def _change_x_on_hovering(self, event):
         self.close_button['bg'] = 'red'
 
     def _return_x_to_normal_state(self, event):
         self.close_button['bg'] = colors.RGRAY
 
+    def _get_pos(self, event):
+        def move_window(event):
+            self.config(cursor="fleur")
+            self.master.geometry(f'+{event.x_root + x_win}+{event.y_root + y_win}')
+
+        def release_window(event):
+            self.config(cursor="arrow")
+
+        x_win = self.master.winfo_x()
+        y_win = self.master.winfo_y()
+
+        start_x = event.x_root
+        start_y = event.y_root
+
+        y_win = y_win - start_y
+        x_win = x_win - start_x
+
+        self.title_bar.bind('<B1-Motion>', move_window)
+        self.title_bar.bind('<ButtonRelease-1>', release_window)
+        self.title_bar_title.bind('<B1-Motion>', move_window)
+        self.title_bar_title.bind('<ButtonRelease-1>', release_window)
+
     def _prepare(self):
         self.title_bar.pack(fill=tk.X)
         self.close_button.pack(side=tk.RIGHT, ipadx=7, ipady=1)
         self.title_bar_title.pack(side=tk.LEFT, padx=10)
-        self.resize_x_widget.pack(side=tk.RIGHT, ipadx=2, fill=tk.Y)
-        self.resize_y_widget.pack(side=tk.BOTTOM, ipadx=2, fill=tk.X)
-        self.container.pack(expand=1, fill=tk.BOTH)
+        self.container.pack(expand=1, fill=tk.BOTH, ipadx=1, ipady=1)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
+        self.title_bar.bind('<Button-1>', self._get_pos)
+        self.title_bar_title.bind('<Button-1>', self._get_pos)
         self.close_button.bind('<Enter>', self._change_x_on_hovering)
         self.close_button.bind('<Leave>', self._return_x_to_normal_state)
         self.pack(side="top", fill="both", expand=True)
