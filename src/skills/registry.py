@@ -23,7 +23,7 @@ assistant_commands = [
 
     {
         CMD.TAGS: 'search',
-        CMD.FUNC: 'search_in_google',
+        CMD.FUNC: 'search_on_google',
         CMD.CLASS: BrowserSkills
     },
 
