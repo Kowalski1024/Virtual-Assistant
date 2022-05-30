@@ -16,8 +16,8 @@ class ScrollableTextFrame(tk.Frame):
         self.txt['yscrollcommand'] = scrollb.set
         self._prepare_fonts()
 
-    def clear_text(self):
-        self.txt.delete(1.0, tk.END)
+    def clear(self):
+        self.txt.delete(1, tk.END)
 
     def add_text(self, text: str, font: FontStyles):
         self.txt.insert(tk.END, text+"\n", font)
