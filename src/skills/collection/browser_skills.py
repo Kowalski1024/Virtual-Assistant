@@ -1,3 +1,5 @@
+import webbrowser
+
 import wikipedia
 
 from src.enumerations import FontStyles
@@ -5,12 +7,17 @@ from src.response import ResponseType, Connection
 
 
 class BrowserSkills(Connection):
-    @staticmethod
-    def search_on_google():
-        raise NotImplementedError
+    def search_on_google(self):
+        key_word = self.recv_from_speech()
+
+        try:
+            webbrowser.open_new_tab(f'https://www.google.com/search?q={key_word.replace(" ", "+")}')
+            self.send(ResponseType.TEXT_RESPONSE, 'Phrase searched', FontStyles.NORMAL)
+        except Exception as e:
+            self.send(ResponseType.SKILL_FAIL, 'Cannot find given phrase', FontStyles.NORMAL)
 
     @staticmethod
-    def open_website_in_browser():
+    def open_website_in_browser(self):
         raise NotImplementedError
 
     def wikipedia(self):
@@ -25,7 +32,6 @@ class BrowserSkills(Connection):
                 self.send(ResponseType.SKILL_FAIL, 'Cannot find given keyword', FontStyles.NORMAL)
         else:
             self.send(ResponseType.SKILL_FAIL, 'Invalid keyword', FontStyles.NORMAL)
-
 
     @staticmethod
     def show_synonyms():
