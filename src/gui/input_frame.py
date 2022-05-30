@@ -1,18 +1,16 @@
 import tkinter as tk
 
-from .. import Response, ResponseType
-
 
 class InputFrame(tk.Frame):
-    def __init__(self, pipe, parent, *args, **kwargs):
+    def __init__(self, func, parent, *args, **kwargs):
         super().__init__(parent, *args, **kwargs)
-        self._pipe = pipe
+        self._func = func
         self.entry = tk.Entry(self)
-        self.button = tk.Button(self, text='Send', command=lambda: self._send(self.entry.get()))
+        self.button = tk.Button(self, text='Send', command=lambda: self._func(self.entry.get()))
         self._prepare_frame()
 
-    def _send(self, txt):
-        self._pipe.send(Response(ResponseType.TEXT_RESPONSE, txt))
+    def clear(self):
+        self.entry.delete(1, tk.END)
 
     def _prepare_frame(self):
         self.grid_rowconfigure(0, weight=1)

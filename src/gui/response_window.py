@@ -3,13 +3,15 @@ import tkinter as tk
 from .input_frame import InputFrame
 from .scrollable_text_frame import ScrollableTextFrame
 from . import colors
+from .. import Response, ResponseType
 
 
 class ResponseWindow(tk.Frame):
     def __init__(self, parent: tk.Tk, pipe):
         super().__init__(parent)
+        self._pipe = pipe
         self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0)
-        self.input_frame = InputFrame(pipe, self.container, bg=colors.DGRAY, highlightthickness=0)
+        self.input_frame = InputFrame(self._send_input_text, self.container, bg=colors.DGRAY, highlightthickness=0)
         self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
         self.title_bar = tk.Frame(self, bg=colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
         self.title_bar_title = tk.Label(self.title_bar, text='', bg=colors.RGRAY, bd=0, fg='white',
@@ -23,12 +25,18 @@ class ResponseWindow(tk.Frame):
         self._prepare()
 
     def show_input_frame(self):
+        self.input_frame.clear()
         self.input_frame.tkraise()
         self.show()
 
     def show_scrollable_frame(self):
+        self.scrollable_frame.clear()
         self.scrollable_frame.tkraise()
         self.show()
+
+    def _send_input_text(self, txt):
+        self._pipe.send(Response(ResponseType.TEXT_RESPONSE, txt))
+        self.hide()
 
     def hide(self):
         self.master.withdraw()
