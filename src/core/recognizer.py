@@ -5,20 +5,21 @@ from src.response import Connection, ResponseType
 
 
 class Recognizer(Connection):
-    def __init__(self, pipe: connection, lock: Lock):
+    def __init__(self, pipe: connection):
         super().__init__(pipe)
-        self._lock = lock
+        self.lock = Lock()
+        self.lock.acquire()
         self._recognizer = sr.Recognizer()
 
     def run(self):
         while True:
-            self._lock.acquire()
+            self.lock.acquire()
             self._speech_to_text(self._get_input())
 
     def _get_input(self) -> sr.AudioData:
         with sr.Microphone() as source:
             print('ready')
-            audio = self._recognizer.listen(source)
+            audio = self._recognizer.listen(source, phrase_time_limit=10)
             print('end')
         return audio
 

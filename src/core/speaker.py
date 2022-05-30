@@ -10,9 +10,13 @@ SOUND_READY = 'files/ready.wav'
 SOUND_TEMP = 'files/temp.mp3'
 
 
+if os.path.exists(SOUND_TEMP):
+    os.remove(SOUND_TEMP)
+
+
 class Speaker:
-    def __init__(self, lock: Lock):
-        self._lock = lock
+    def __init__(self):
+        self.lock = Lock()
         self._message_queue = Queue(maxsize=5)
         self._thread = Thread(target=self._run_speech_engine)
         self._stop_speaker = False
@@ -27,10 +31,10 @@ class Speaker:
         while not self._message_queue.empty():
             message = self._message_queue.get()
             if message:
-                with self._lock:
+                with self.lock:
                     batches = self._create_text_batches(raw_text=message)
                     for batch in batches:
-                        with open(SOUND_TEMP, 'x') as f:
+                        with open(SOUND_TEMP, 'xb') as f:
                             gTTS(batch).write_to_fp(f)
                         playsound(SOUND_TEMP)
                         if self._stop_speaker:
@@ -51,7 +55,7 @@ class Speaker:
         playsound(SOUND_READY)
 
     @staticmethod
-    def _create_text_batches(raw_text: str, words_per_batch=8):
+    def _create_text_batches(raw_text: str, words_per_batch=16):
         words = raw_text.split(' ')
         for split in range(0, len(words), words_per_batch):
             yield ' '.join(words[split:split + words_per_batch])
