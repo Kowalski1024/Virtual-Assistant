@@ -11,7 +11,7 @@ class ScrollableTextFrame(tk.Frame):
         self.grid_columnconfigure(0, weight=1)
         self.txt = tk.Text(self, wrap=tk.WORD)
         self.txt.grid(row=0, column=0, sticky=tk.NSEW, padx=2, pady=2)
-        self.txt.config(state=tk.DISABLED)
+        # self.txt.config(state=tk.DISABLED)
         scrollb = tk.Scrollbar(self, command=self.txt.yview)
         scrollb.grid(row=0, column=1, sticky=tk.NSEW)
         self.txt['yscrollcommand'] = scrollb.set

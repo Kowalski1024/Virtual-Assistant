@@ -29,7 +29,7 @@ class Recognizer(Connection):
             self.send(ResponseType.TEXT_RESPONSE, text)
         except sr.UnknownValueError as e:
             # Google Speech Recognition could not understand audio
-            self.send(ResponseType.SPEECH_FAIL, str(e))
+            self.send(ResponseType.SPEECH_FAIL, 'Google Speech Recognition could not understand audio')
         except sr.RequestError as e:
             # Could not request results from Google Speech Recognition service
-            self.send(ResponseType.SPEECH_ERROR, str(e))
+            self.send(ResponseType.SPEECH_ERROR, 'Could not request results from Google Speech Recognition service')

@@ -17,12 +17,12 @@ class ResponseWindow(tk.Frame):
         self._progress_stop_flag = False
 
         # styles
-        self.container = tk.Frame(self, bg=colors.DGRAY, highlightthickness=0, padx=4, pady=4)
+        self.container = tk.Frame(self, bg=colors.RGRAY, highlightthickness=0, padx=4, pady=4)
         self.input_frame = InputFrame(self._send_input_text, self.container, bg=colors.DGRAY, highlightthickness=0)
         self.scrollable_frame = ScrollableTextFrame(self.container, bg=colors.DGRAY, highlightthickness=0)
 
         self.title_bar = tk.Frame(self, bg=colors.RGRAY, relief='raised', bd=0, highlightthickness=0)
-        self.title_bar_title = tk.Label(self.title_bar, text='', bg=colors.RGRAY, bd=0, fg='white',
+        self.title_bar_title = tk.Label(self.title_bar, text='Virtual Assistant', bg=colors.RGRAY, bd=0, fg='white',
                                         font=("helvetica", 10),
                                         highlightthickness=0)
         self.progress_bar = tk.ttk.Progressbar(self, orient=tk.HORIZONTAL, length=260, mode='determinate')

@@ -36,7 +36,7 @@ class Connection:
         :return: user speech input as text
         """
         while True:
-            self._pipe.send(Response(ResponseType.WAITING_FOR_SPEECH_INPUT, text, FontStyles.NORMAL))
+            self._pipe.send(Response(ResponseType.WAITING_FOR_SPEECH_INPUT, text, FontStyles.TITLE))
             data: Response = self._pipe.recv()
             if data.type == ResponseType.TEXT_RESPONSE:
                 break
