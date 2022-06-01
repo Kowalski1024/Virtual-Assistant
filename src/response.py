@@ -1,5 +1,6 @@
 from multiprocessing import connection
 from dataclasses import dataclass
+import logging
 
 from .enumerations import ResponseType, FontStyles
 
@@ -9,6 +10,9 @@ class Response:
     type: ResponseType
     message: str = None
     font: FontStyles = None
+
+    def __repr__(self):
+        return f"(type={self.type}, message={self.message[:20]}..., font={self.font})"
 
 
 class Connection:

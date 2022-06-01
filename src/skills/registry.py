@@ -40,6 +40,12 @@ assistant_commands = [
     },
 
     {
+        CMD.TAGS: 'synonyms',
+        CMD.FUNC: 'show_synonyms',
+        CMD.CLASS: BrowserSkills
+    },
+
+    {
         CMD.TAGS: 'show calendar',
         CMD.FUNC: 'display_events',
         CMD.CLASS: CalendarSkills
