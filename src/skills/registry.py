@@ -49,5 +49,11 @@ assistant_commands = [
         CMD.TAGS: 'add event',
         CMD.FUNC: 'create_event',
         CMD.CLASS: CalendarSkills
+    },
+
+    {
+        CMD.TAGS: 'send email',
+        CMD.FUNC: 'run',
+        CMD.CLASS: EmailSkills
     }
 ]
