@@ -43,5 +43,11 @@ assistant_commands = [
         CMD.TAGS: 'show calendar',
         CMD.FUNC: 'display_events',
         CMD.CLASS: CalendarSkills
+    },
+
+    {
+        CMD.TAGS: 'add event',
+        CMD.FUNC: 'create_event',
+        CMD.CLASS: CalendarSkills
     }
 ]
