@@ -35,7 +35,7 @@ assistant_commands = [
 
     {
         CMD.TAGS: 'remind',
-        CMD.FUNC: 'create_reminder',
+        CMD.FUNC: 'run',
         CMD.CLASS: ReminderSkills
     },
 
