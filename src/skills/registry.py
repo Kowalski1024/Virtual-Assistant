@@ -37,5 +37,11 @@ assistant_commands = [
         CMD.TAGS: 'remind',
         CMD.FUNC: 'create_reminder',
         CMD.CLASS: ReminderSkills
+    },
+
+    {
+        CMD.TAGS: 'show calendar',
+        CMD.FUNC: 'display_events',
+        CMD.CLASS: CalendarSkills
     }
 ]
