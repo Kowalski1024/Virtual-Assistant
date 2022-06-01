@@ -40,9 +40,10 @@ class InternetTests(unittest.TestCase):
 
     def test_synonym_search(self):
         test_startup(self, self.internet_cls.show_synonyms)
-        self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'cake'))
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'yes'))
+        synonyms = "['agree', 'aye', 'consent', 'nod', 'yea', 'affirmative', 'all right']"
         data: Response = self.parent.recv()
-        self.assertNotEqual("Couldn't find any synonyms", data.message)
+        self.assertTrue(all(x in synonyms for x in data.message), "Couldn't find synonyms")
 
 
 if __name__ == "__main__":
