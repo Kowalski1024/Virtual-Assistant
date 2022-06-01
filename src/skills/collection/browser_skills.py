@@ -35,7 +35,7 @@ class BrowserSkills(Connection):
         else:
             self.send(ResponseType.SKILL_FAIL, 'Invalid keyword', FontStyles.NORMAL)
 
-    def show_synonyms():
+    def show_synonyms(self):
         word = self.recv_from_speech()
 
         try:
