@@ -35,7 +35,7 @@ assistant_commands = [
 
     {
         CMD.TAGS: 'remind',
-        CMD.FUNC: 'create_reminder',
+        CMD.FUNC: 'run',
         CMD.CLASS: ReminderSkills
     },
 
@@ -55,5 +55,11 @@ assistant_commands = [
         CMD.TAGS: 'add event',
         CMD.FUNC: 'create_event',
         CMD.CLASS: CalendarSkills
+    },
+
+    {
+        CMD.TAGS: 'send email',
+        CMD.FUNC: 'run',
+        CMD.CLASS: EmailSkills
     }
 ]
