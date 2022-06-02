@@ -6,6 +6,7 @@ from .speaker import Speaker
 from ..gui import GUI
 from ..skills.skill_matching import SkillMatching
 from src.response import Response, ResponseType
+from src.enumerations import FontStyles
 
 
 class ProcessTuple:
@@ -50,6 +51,8 @@ class Assistant:
         self.close_connection()
 
     def wake_up(self):
+        from src.skills.collection.browser_skills import BrowserSkills
+
         self._graphical_interface.clear()
         if self._speaker.speaker_alive():
             self._speaker.stop_speaker()
@@ -57,7 +60,10 @@ class Assistant:
             if self._skill_matching.is_alive():
                 self._skill_matching.terminate()
             else:
-                self._skill_matching.run()
+                if BrowserSkills.internet_connectivity_check():
+                    self._skill_matching.run()
+                else:
+                    self._graphical_interface.write('Sorry, no internet connection', FontStyles.TITLE, clear=2)
 
     @property
     def parent_connection(self) -> mp.connection:
