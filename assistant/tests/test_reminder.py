@@ -1,8 +1,8 @@
 import unittest
 
-from src.skills.collection.reminder_skills import ReminderSkills
+from assistant.skills.collection.reminder_skills import ReminderSkills
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
+from assistant.response import ResponseType, Response
 
 
 class ReminderTests(unittest.TestCase):

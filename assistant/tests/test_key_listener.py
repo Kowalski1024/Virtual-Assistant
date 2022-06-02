@@ -2,7 +2,7 @@ import unittest
 from unittest import mock
 from pynput import keyboard
 
-from src.core.key_listener import KeyListener
+from assistant.core.key_listener import KeyListener
 
 
 class KeyListenerAsset(unittest.TestCase):

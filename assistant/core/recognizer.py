@@ -1,7 +1,7 @@
 import speech_recognition as sr
 from multiprocessing import connection, Lock
 
-from src.response import Connection, ResponseType
+from assistant.response import Connection, ResponseType
 
 
 class Recognizer(Connection):

@@ -3,8 +3,8 @@ import datetime
 
 import python_weather
 
-from src.enumerations import FontStyles
-from src.response import Connection, ResponseType
+from assistant.enumerations import FontStyles
+from assistant.response import Connection, ResponseType
 
 
 class WeatherSkills(Connection):
