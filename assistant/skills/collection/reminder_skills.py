@@ -30,6 +30,8 @@ class ReminderSkills(Connection):
         if remind_time:
             self.send(ResponseType.TEXT_RESPONSE, 'Reminder created', FontStyles.NORMAL)
             self._create_reminder(remind_time)
+        else:
+            self.send(ResponseType.SKILL_FAIL, "Wrong reminder time", FontStyles.NORMAL)
 
     def _create_reminder(self, remind_time: int) -> None:
         # Creates new thread
