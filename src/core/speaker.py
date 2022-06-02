@@ -4,9 +4,8 @@ import os
 from playsound import playsound
 from gtts import gTTS
 
-cwd = os.path.abspath(os.path.dirname(__file__))
-SOUND_READY = os.path.abspath(os.path.join(cwd, 'files/ready.wav'))
-SOUND_TEMP = os.path.abspath(os.path.join(cwd, 'files/temp.mp3'))
+SOUND_READY = 'files/ready.wav'
+SOUND_TEMP = 'files/temp.mp3'
 
 
 class Speaker:
