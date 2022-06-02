@@ -22,7 +22,7 @@ class KeyListenerAsset(unittest.TestCase):
         self.mock.assert_not_called()
         self.key_listener._on_press(keyboard.KeyCode(char="w"))
         self.mock.assert_not_called()
-        self.key_listener._on_press(keyboard.key.ctrl_l)
+        self.key_listener._on_press(keyboard.Key.ctrl_l)
         self.mock.assert_called()
 
 
