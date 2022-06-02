@@ -6,21 +6,23 @@ from src.response import ResponseType, Response
 
 
 class SkillMatchingTests(unittest.TestCase):
-    parent = None
-    skill_matching = None
-    child = None
+    def setUp(self) -> None:
+        self.parent, self.child = Pipe()
+        self.skill_matching = SkillMatching(self.child)
+        self.process = Process(target=self.skill_matching.run, daemon=True)
+        self.process.start()
 
-    @classmethod
-    def setUpClass(cls) -> None:
-        cls.parent, cls.child = Pipe()
-        cls.skill_matching = SkillMatching(cls.child)
-        process = Process(target=cls.skill_matching.run, daemon=True)
-        process.start()
+    def tearDown(self) -> None:
+        self.process.terminate()
+        self.parent.close()
+        self.child.close()
 
     def test_probability_less_than_one(self):
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'wiki'))
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'no'))
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'show wikipedia'))
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'yes'))
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'Tokyo'))
         data: Response = self.parent.recv()
         self.assertNotEqual(data.type, ResponseType.FAIL_MATCH)
 
