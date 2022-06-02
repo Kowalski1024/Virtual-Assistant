@@ -75,7 +75,7 @@ class CalendarSkills(Connection):
         try:
             date = self._convert_to_date(date_text)
         except Exception as e:
-            self.send(ResponseType.TEXT_RESPONSE, 'Wrong date', FontStyles.NORMAL)
+            self.send(ResponseType.SKILL_FAIL, 'Wrong date', FontStyles.NORMAL)
             
         return date
 
@@ -86,7 +86,7 @@ class CalendarSkills(Connection):
         try:
             hour = self._convert_to_hour(hour_text)
         except Exception as e:
-            self.send(ResponseType.TEXT_RESPONSE, 'Wrong hour', FontStyles.NORMAL)
+            self.send(ResponseType.SKILL_FAIL, 'Wrong hour', FontStyles.NORMAL)
 
         return hour
 
