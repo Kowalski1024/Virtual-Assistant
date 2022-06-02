@@ -96,7 +96,9 @@ class Assistant:
                 self._graphical_interface.get_text_input()
             elif response.type == ResponseType.CHANGE_RESPONSE:
                 self._change_response_type(response)
-            elif response.type in {ResponseType.TEXT_RESPONSE, ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR}:
+            elif response.type == ResponseType.TEXT_RESPONSE:
                 self._response_by_type(response)
+            elif response.type in {ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR}:
+                self._response_by_type(response, clear=2)
 
         self._graphical_interface.after(ms=20, func=self._response)
