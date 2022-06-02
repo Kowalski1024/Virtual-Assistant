@@ -13,7 +13,6 @@ from src.response import Connection, ResponseType
 class CalendarSkills(Connection):
     def create_event(self) -> None:
         """Creates an event in Outlook calendar"""
-
         outlook = win32com.client.Dispatch('Outlook.Application')
         event = outlook.CreateItem(1)  # AppointmentItem
 
@@ -27,7 +26,6 @@ class CalendarSkills(Connection):
 
     def _get_event_data(self) -> Tuple:
         # Gets from user start date, start hour, subject, duration and location of an event
-
         event_start_date = self._get_date('Enter start date: ')
         event_start_hour = self._get_hour('Enter start hour: ')
         event_start_date = f'{event_start_date.strftime("%d/%m/%Y")} {event_start_hour}'
@@ -45,10 +43,9 @@ class CalendarSkills(Connection):
         return event_start_date, event_subject, int(event_duration), event_location
 
     def display_events(self) -> None:
-        """Gets start and end dates from user
+        """Gets start and end dates from user.
         Gets events from Outlook Calendar in given range
         """
-
         outlook = win32com.client.Dispatch('Outlook.Application').GetNamespace('MAPI')
         calender = outlook.GetDefaultFolder(9)
         items = calender.Items

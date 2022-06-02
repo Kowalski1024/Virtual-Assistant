@@ -15,6 +15,11 @@ options = {
 
 class EmailSkills(Connection):
     def run(self) -> None:
+        """Gives input from user to prepare mail, sends it or saves as draft or cancels it.
+        Limitations:
+            * Mail cancelling can only take place while writing mail content
+        """
+
         outlook = win32com.client.Dispatch('Outlook.Application')
         mail = outlook.CreateItem(0)
         mail.subject, mail.To, mail.Body, option = self._prepare_email()
@@ -32,7 +37,7 @@ class EmailSkills(Connection):
         self.send(ResponseType.TEXT_RESPONSE, 'Email sent', FontStyles.NORMAL)
 
     def _save_as_draft(self, mail) -> None:
-        # Saves mail as draft prints suitable message
+        # Saves mail as draft and prints suitable message
         mail.save()
         self.send(ResponseType.TEXT_RESPONSE, 'Email saved as draft', FontStyles.NORMAL)
 
@@ -40,7 +45,7 @@ class EmailSkills(Connection):
         self.send(ResponseType.TEXT_RESPONSE, 'Email cancelled', FontStyles.NORMAL)
 
     def _prepare_email(self) -> Tuple:
-        # Gets fom user recipient address, subject, content of an email and what to do with it (save, save, cancel)
+        # Gets fom user recipient address, subject, content of an email and what to do with it (save, save, cancel
         to = self._get_email_recipient_address('Enter email recipient address: ')
         subject = self._get_subject('Enter subject: ')
         content, option = self._get_message_content_and_command('Enter content: ')
@@ -69,7 +74,7 @@ class EmailSkills(Connection):
         content = ''
         phrase = self.recv_from_speech(text)
 
-        while phrase.lower() not in ('send', 'cancel', 'save', 'Send', 'Cancel', 'Save'):
+        while phrase.lower() not in ('send', 'save', 'cancel'):
             content += f' {phrase}'
             phrase = self.recv_from_speech()
 

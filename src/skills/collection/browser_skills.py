@@ -11,7 +11,7 @@ from src.response import ResponseType, Connection
 
 class BrowserSkills(Connection):
     def search_on_google(self) -> None:
-        """Gets keyword from user and opens google.com with search results"""
+        """Gets keyword from user and opens google.com with search results for given keyword"""
         key_word = self.recv_from_speech('Enter keyword: ')
 
         try:
@@ -51,8 +51,7 @@ class BrowserSkills(Connection):
             self.send(ResponseType.SKILL_FAIL, 'Cannot open the website', FontStyles.NORMAL)
 
     def wikipedia(self) -> None:
-        """
-        Gets keyword from user.
+        """Gets keyword from user.
         Searches given keyword on Wikipedia.
         """
         keyword = self.recv_from_speech('Enter keyword: ')
@@ -68,6 +67,7 @@ class BrowserSkills(Connection):
             self.send(ResponseType.SKILL_FAIL, 'Invalid keyword', FontStyles.NORMAL)
 
     def show_synonyms(self):
+        """Gets word from user and displays synonyms of this word"""
         word = self.recv_from_speech('Enter word: ')
 
         try:
@@ -97,9 +97,7 @@ class BrowserSkills(Connection):
 
     @staticmethod
     def internet_connectivity_check(url='http://www.google.com/', timeout=2):
-        """
-            Checks for internet connection availability based on google page.
-        """
+        """Checks for internet connection availability based on Google page."""
         try:
             _ = requests.get(url, timeout=timeout)
             return True
@@ -108,8 +106,7 @@ class BrowserSkills(Connection):
 
     @staticmethod
     def _create_url(website: str) -> str:
-        # Creates an url. It checks if there is .com suffix and add it if it not exist.
-
+        # Creates an url. It checks if there is .com suffix and add it if it doesn't exist.
         top_level_domains = ['.com', '.org', '.net', '.int', '.edu', '.gov', '.mil', '.pl']
         url = None
         for top_level_domain in top_level_domains:
