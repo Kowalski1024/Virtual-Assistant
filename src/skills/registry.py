@@ -10,6 +10,18 @@ class CMD(enum.Enum):
 
 assistant_commands = [
     {
+        CMD.TAGS: 'voice',
+        CMD.FUNC: 'change_response_to_voice',
+        CMD.CLASS: AssistantSkills
+    },
+
+    {
+        CMD.TAGS: 'text',
+        CMD.FUNC: 'change_response_to_text',
+        CMD.CLASS: AssistantSkills
+    },
+
+    {
         CMD.TAGS: 'wikipedia',
         CMD.FUNC: 'wikipedia',
         CMD.CLASS: BrowserSkills

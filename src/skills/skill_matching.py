@@ -28,14 +28,16 @@ class SkillMatching(Connection):
                 continue
 
             skill = assistant_commands[match_index]
+            tag = skill[CMD.TAGS]
             if probability < 0.5:
                 self.send(ResponseType.FAIL_MATCH, f"Sorry no match for \"{sentence}\", please repeat.")
             elif probability < 1:
-                self.send(ResponseType.FAIL_MATCH, f"Do you mean {skill[CMD.TAGS]}? Say yes/no or repeat.")
+                self.send(ResponseType.FAIL_MATCH, f"Do you mean {tag}? Say yes/no or repeat.")
             elif probability == 1:
                 cls = skill[CMD.CLASS](self._pipe)
                 getattr(cls, skill[CMD.FUNC])()
                 break
+
 
     def _find_best_match(self, sentence):
         similarities = cosine_similarity(self._skill_matrix, self._tfid_vectorizer.transform([sentence])).flatten()
