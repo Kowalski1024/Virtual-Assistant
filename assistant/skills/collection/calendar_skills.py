@@ -21,7 +21,7 @@ class CalendarSkills(Connection):
         if event.Duration == 0:
             return
         
-         self.send(ResponseType.TEXT_RESPONSE, f'{event.Start} {event.Subject} {event.Duration} {event.Location}',
+        self.send(ResponseType.TEXT_RESPONSE, f'{event.Start} {event.Subject} {event.Duration} {event.Location}',
                   FontStyles.NORMAL)
 
         event.Save()
