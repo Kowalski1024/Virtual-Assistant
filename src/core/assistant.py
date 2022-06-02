@@ -44,7 +44,10 @@ class Assistant:
 
     def wake_up(self):
         self._graphical_interface.clear()
-        self._skill_matching.run()
+        if self._speaker.speaker_alive():
+            self._speaker.stop_speaker()
+        else:
+            self._skill_matching.run()
 
     @property
     def parent_connection(self) -> mp.connection:
@@ -62,25 +65,40 @@ class Assistant:
         self._pipe_connection[0].close()
         self._pipe_connection[1].close()
 
-    def _response(self):
-        def response_by_type(d, clear=0):
-            if self.response_type:
-                self._speaker.response_in_speech(d.message)
-            else:
-                self._graphical_interface.write(d.message, d.font, clear)
+    def _response_by_type(self, response, clear=0):
+        if self.response_type:
+            self._speaker.response_in_speech(response.message)
+        else:
+            self._graphical_interface.write(response.message, response.font, clear)
 
+    def _get_speech_input(self, response: Response):
+        if response.message:
+            self._response_by_type(response, 2)
+        with self._speaker.lock:
+            try:
+                self._recognizer.obj.lock.release()
+            except ValueError:
+                return
+            self._speaker.assistant_ready()
+
+    def _change_response_type(self, response):
+        if response.message == 'voice':
+            self.response_type = True
+        else:
+            self.response_type = False
+
+    def _response(self):
         if self.parent_connection.poll():
-            data: Response = self.parent_connection.recv()
-            if data.type == ResponseType.WAITING_FOR_SPEECH_INPUT:
-                if data.message:
-                    response_by_type(data, 2)
-                with self._speaker.lock:
-                    self._recognizer.obj.lock.release()
-                    self._speaker.assistant_ready()
-            elif data.type == ResponseType.WAITING_FOR_TEXT_INPUT:
+            response: Response = self.parent_connection.recv()
+            if response.type == ResponseType.WAITING_FOR_SPEECH_INPUT:
+                self._get_speech_input(response)
+            elif response.type == ResponseType.WAITING_FOR_TEXT_INPUT:
                 self._graphical_interface.get_text_input()
-            elif data.type in {ResponseType.TEXT_RESPONSE, ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR}:
-                print(data)
-                response_by_type(data)
+            elif response.type == ResponseType.CHANGE_RESPONSE:
+                self._change_response_type(response)
+            elif response.type == ResponseType.TEXT_RESPONSE:
+                self._response_by_type(response)
+            elif response.type in {ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR}:
+                self._response_by_type(response, clear=2)
 
         self._graphical_interface.after(ms=20, func=self._response)
