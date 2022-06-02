@@ -16,12 +16,19 @@ class ProcessTuple:
         self.process = mp.Process()
 
     def run(self):
-        if self.process.is_alive():
-            self.process.terminate()
+        self.terminate()
 
         self.process = mp.Process(target=self.obj.run, daemon=True)
         self.process.start()
         return self
+
+    def is_alive(self):
+        return self.process.is_alive()
+
+    def terminate(self):
+        if self.is_alive():
+            self.process.terminate()
+            self.process.join()
 
 
 class Assistant:
@@ -47,7 +54,10 @@ class Assistant:
         if self._speaker.speaker_alive():
             self._speaker.stop_speaker()
         else:
-            self._skill_matching.run()
+            if self._skill_matching.is_alive():
+                self._skill_matching.terminate()
+            else:
+                self._skill_matching.run()
 
     @property
     def parent_connection(self) -> mp.connection:
