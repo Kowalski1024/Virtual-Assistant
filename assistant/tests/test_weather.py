@@ -1,7 +1,7 @@
 import unittest
-from src.skills.collection.weather_skills import WeatherSkills
+from assistant.skills.collection.weather_skills import WeatherSkills
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
+from assistant.response import ResponseType, Response
 
 days = ['Now', 'Today', 'Monday', 'Tuesday', 'Wednesday', 'Thursday', 'Friday', 'Saturday', 'Sunday']
 conditions = ['rain', 'sun', 'cloud', 'storm', 'clear', 'hurricane', 'snow', 'tornado', 'wind']

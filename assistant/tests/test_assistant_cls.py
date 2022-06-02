@@ -1,8 +1,8 @@
 import unittest
 
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
-from src.core.assistant import Assistant
+from assistant.response import ResponseType, Response
+from assistant.core.assistant import Assistant
 from unittest import mock
 
 

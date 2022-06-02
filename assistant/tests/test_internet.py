@@ -2,9 +2,9 @@ import unittest
 from unittest import mock
 from pynput import keyboard
 
-from src.skills.collection.browser_skills import BrowserSkills
+from assistant.skills.collection.browser_skills import BrowserSkills
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
+from assistant.response import ResponseType, Response
 
 
 def test_startup(key_listener_asset, method):

@@ -5,8 +5,8 @@ import webbrowser
 
 import wikipedia
 
-from src.enumerations import FontStyles
-from src.response import ResponseType, Connection
+from assistant.enumerations import FontStyles
+from assistant.response import ResponseType, Connection
 
 
 class BrowserSkills(Connection):

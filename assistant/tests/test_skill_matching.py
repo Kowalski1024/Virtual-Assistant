@@ -1,8 +1,8 @@
 import unittest
 
-from src.skills.skill_matching import SkillMatching
+from assistant.skills.skill_matching import SkillMatching
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
+from assistant.response import ResponseType, Response
 
 
 class SkillMatchingTests(unittest.TestCase):

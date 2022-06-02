@@ -3,8 +3,8 @@ import time
 
 from threading import Thread
 
-from src.enumerations import FontStyles
-from src.response import ResponseType, Connection, Response
+from assistant.enumerations import FontStyles
+from assistant.response import ResponseType, Connection, Response
 
 time_intervals = {
     'seconds': {'variations': ['sec', 'second', 'seconds', 'Sec', 'Second', 'Seconds'],
