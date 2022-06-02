@@ -3,9 +3,11 @@ from PIL import Image
 from threading import Thread
 import tkinter as tk
 from .response_window import ResponseWindow
+import os
 
 
-ICON_PATH = "files/icon_circle.ico"
+cwd = os.path.abspath(os.path.dirname(__file__))
+ICON_PATH = os.path.abspath(os.path.join(cwd, '../files/icon_circle.ico'))
 
 
 class GUI(tk.Tk):

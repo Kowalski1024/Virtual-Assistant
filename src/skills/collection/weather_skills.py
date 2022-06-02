@@ -8,11 +8,11 @@ from src.response import Connection, ResponseType
 
 
 class WeatherSkills(Connection):
-    def run(self):
+    def run(self) -> None:
         loop = asyncio.get_event_loop()
         loop.run_until_complete(self.check_weather())
 
-    async def check_weather(self):
+    async def check_weather(self) -> None:
         client = python_weather.Client()
         city = self.recv_from_speech()
 
@@ -22,13 +22,15 @@ class WeatherSkills(Connection):
             self.send(ResponseType.SKILL_FAIL, 'City not found', FontStyles.NORMAL)
             await client.close()
 
-        message = self._format_message(weather)
+        message = self._create_message(weather)
         self.send(ResponseType.TEXT_RESPONSE, message, FontStyles.NORMAL)
 
         await client.close()
 
     @staticmethod
-    def _format_message(weather, temperature_unit='C'):
+    def _create_message(weather, temperature_unit='C') -> str:
+        # Creates output message from result returned by weather api
+
         message = f'{weather.location_name}\nNow: {str(weather.current.temperature)} {temperature_unit} ' \
                   f'{weather.current.sky_text}\n'
 

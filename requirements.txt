@@ -6,3 +6,4 @@ pynput==1.7.6
 wikipedia==1.4.0
 scikit-learn==1.0.1
 python-dateutil~=2.8.2
+requests~=2.25.1
