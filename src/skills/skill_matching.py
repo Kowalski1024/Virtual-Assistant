@@ -19,7 +19,7 @@ class SkillMatching(Connection):
             sentence = self.recv_from_speech()
             match_index, probability = self._find_best_match(sentence)
 
-            if sentence == 'yes' and skill is not None and probability >= 0.5:
+            if sentence == 'yes' and skill is not None:
                 cls = skill[CMD.CLASS](self._pipe)
                 getattr(cls, skill[CMD.FUNC])()
                 break
