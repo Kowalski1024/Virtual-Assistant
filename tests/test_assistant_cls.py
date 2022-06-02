@@ -6,6 +6,18 @@ from src.core.assistant import Assistant
 from unittest import mock
 
 
+def internet_connectivity_check(url='http://www.google.com/', timeout=2):
+    import requests
+    """
+        Checks for internet connection availability based on google page.
+    """
+    try:
+        _ = requests.get(url, timeout=timeout)
+        return True
+    except requests.ConnectionError:
+        return False
+
+
 class AssistantTest(unittest.TestCase):
     assistant: Assistant = None
 
@@ -36,7 +48,10 @@ class AssistantTest(unittest.TestCase):
     def test_wake_up(self):
         self.assertEqual(self.assistant._skill_matching.process.is_alive(), False)
         self.assistant.wake_up()
-        self.assertEqual(self.assistant._skill_matching.process.is_alive(), True)
+        if internet_connectivity_check():
+            self.assertEqual(self.assistant._skill_matching.process.is_alive(), True)
+        else:
+            self.assertEqual(self.assistant._skill_matching.process.is_alive(), False)
         self.assistant.wake_up()
         self.assertEqual(self.assistant._skill_matching.process.is_alive(), False)
 
