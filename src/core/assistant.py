@@ -44,6 +44,7 @@ class Assistant:
 
     def wake_up(self):
         self._graphical_interface.clear()
+        self._speaker.stop_speaker()
         self._skill_matching.run()
 
     @property
@@ -72,7 +73,10 @@ class Assistant:
         if response.message:
             self._response_by_type(response, 2)
         with self._speaker.lock:
-            self._recognizer.obj.lock.release()
+            try:
+                self._recognizer.obj.lock.release()
+            except ValueError:
+                return
             self._speaker.assistant_ready()
 
     def _change_response_type(self, response):
