@@ -44,8 +44,10 @@ class Assistant:
 
     def wake_up(self):
         self._graphical_interface.clear()
-        self._speaker.stop_speaker()
-        self._skill_matching.run()
+        if self._speaker.speaker_alive():
+            self._speaker.stop_speaker()
+        else:
+            self._skill_matching.run()
 
     @property
     def parent_connection(self) -> mp.connection:
