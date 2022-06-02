@@ -4,8 +4,8 @@ import os
 from playsound import playsound
 from gtts import gTTS
 
-SOUND_READY = 'files/ready.wav'
-SOUND_TEMP = 'files/temp.mp3'
+SOUND_READY = 'assistant/files/ready.wav'
+SOUND_TEMP = 'assistant/files/temp.mp3'
 
 
 class Speaker:
