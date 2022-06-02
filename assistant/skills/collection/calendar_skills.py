@@ -6,8 +6,8 @@ import dateutil.parser
 
 import win32com.client
 
-from src.enumerations import FontStyles
-from src.response import Connection, ResponseType
+from assistant.enumerations import FontStyles
+from assistant.response import Connection, ResponseType
 
 
 class CalendarSkills(Connection):
@@ -20,6 +20,9 @@ class CalendarSkills(Connection):
 
         if event.Duration == 0:
             return
+        
+         self.send(ResponseType.TEXT_RESPONSE, f'{event.Start} {event.Subject} {event.Duration} {event.Location}',
+                  FontStyles.NORMAL)
 
         event.Save()
         event.Send()
@@ -65,13 +68,23 @@ class CalendarSkills(Connection):
     def _get_date(self, text: str) -> datetime.date:
         # Gets date from user and returns datetime.date object from this date
         date_text = self.recv_from_speech(text)
-        date = self._convert_to_date(date_text)
+        date = None
+        try:
+            date = self._convert_to_date(date_text)
+        except Exception as e:
+            self.send(ResponseType.SKILL_FAIL, 'Wrong date', FontStyles.NORMAL)
+            
         return date
 
     def _get_hour(self, text: str) -> str:
         # Gets hour from user and returns hour in specific format
         hour_text = self.recv_from_speech(text)
-        hour = self._convert_to_hour(hour_text)
+        hour = None
+        try:
+            hour = self._convert_to_hour(hour_text)
+        except Exception as e:
+            self.send(ResponseType.SKILL_FAIL, 'Wrong hour', FontStyles.NORMAL)
+
         return hour
 
     def _get_text(self, text: str) -> str:

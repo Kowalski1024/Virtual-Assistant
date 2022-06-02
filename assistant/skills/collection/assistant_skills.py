@@ -1,5 +1,5 @@
-from src.enumerations import FontStyles
-from src.response import ResponseType, Connection
+from assistant.enumerations import FontStyles
+from assistant.response import ResponseType, Connection
 
 
 class AssistantSkills(Connection):

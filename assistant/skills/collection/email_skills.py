@@ -3,8 +3,8 @@ from typing import Tuple
 
 import win32com.client
 
-from src.enumerations import FontStyles
-from src.response import Connection, ResponseType
+from assistant.enumerations import FontStyles
+from assistant.response import Connection, ResponseType
 
 options = {
     'send': 1,
