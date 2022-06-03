@@ -47,6 +47,8 @@ class BrowserSkills(Connection):
 
                 webbrowser.open_new_tab(url)
                 self.send(ResponseType.TEXT_RESPONSE, 'Browser opened', FontStyles.NORMAL)
+            else:
+                self.send(ResponseType.SKILL_FAIL, 'Cannot open the website', FontStyles.NORMAL)
         except Exception as e:
             self.send(ResponseType.SKILL_FAIL, 'Cannot open the website', FontStyles.NORMAL)
 
