@@ -47,8 +47,8 @@ class EmailSkills(Connection):
     def _prepare_email(self) -> Tuple:
         # Gets fom user recipient address, subject, content of an email and what to do with it (save, save, cancel
         to = self._get_email_recipient_address('Enter email recipient address: ')
-        subject = self._get_subject('Enter subject: ')
-        content, option = self._get_message_content_and_command('Enter content: ')
+        subject = self._get_subject('Say subject')
+        content, option = self._get_message_content_and_command('Say content: ')
 
         return subject, to, content, option
 

@@ -26,7 +26,7 @@ class ReminderSkills(Connection):
     def run(self) -> None:
         """Creates a simple reminder for the given time interval (seconds or minutes or hours)"""
 
-        remind_time = self._get_remind_time('Enter reminder duration: ')
+        remind_time = self._get_remind_time('Say reminder duration')
         if remind_time:
             self.send(ResponseType.TEXT_RESPONSE, 'Reminder created', FontStyles.NORMAL)
             self._create_reminder(remind_time)

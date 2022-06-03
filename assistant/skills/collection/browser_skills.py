@@ -12,7 +12,7 @@ from assistant.response import ResponseType, Connection
 class BrowserSkills(Connection):
     def search_on_google(self) -> None:
         """Gets keyword from user and opens google.com with search results for given keyword"""
-        key_word = self.recv_from_speech('Enter keyword: ')
+        key_word = self.recv_from_speech('Say keyword')
 
         try:
             webbrowser.open_new_tab(f'https://www.google.com/search?q={key_word.replace(" ", "+")}')
@@ -34,7 +34,7 @@ class BrowserSkills(Connection):
               and execute only the first one, in our case will open the YouTube.
             - Support ONLY the following top domains: '.com', '.org', '.net', '.int', '.edu', '.gov', '.mil', '.pl'
         """
-        website = self.recv_from_speech('Enter website: ')
+        website = self.recv_from_speech('Say website name')
         domain_regex = '([\.a-zA-Z]+)'
 
         reg_ex = re.search(domain_regex, website)
@@ -56,7 +56,7 @@ class BrowserSkills(Connection):
         """Gets keyword from user.
         Searches given keyword on Wikipedia.
         """
-        keyword = self.recv_from_speech('Enter keyword: ')
+        keyword = self.recv_from_speech('Say keyword')
 
         if keyword not in (ResponseType.SPEECH_ERROR, ResponseType.SPEECH_FAIL):
             try:
@@ -70,7 +70,7 @@ class BrowserSkills(Connection):
 
     def show_synonyms(self):
         """Gets word from user and displays synonyms of this word"""
-        word = self.recv_from_speech('Enter word: ')
+        word = self.recv_from_speech('Say word')
 
         try:
             url = f'https://api.dictionaryapi.dev/api/v2/entries/en/{word}'
