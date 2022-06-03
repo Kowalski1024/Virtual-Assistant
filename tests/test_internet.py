@@ -98,7 +98,18 @@ class InternetTests(unittest.TestCase):
         self.assertTrue(all(x in synonyms for x in data.message), "Couldn't find synonyms")
         process.terminate()
 
+    def test_synonym_search_empty(self):
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
 
+        process = Process(target=self.internet_cls.show_synonyms, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, ''))
+        data: Response = self.parent.recv()
+        self.assertTrue(data.message, "Couldn't find synonyms")
+        process.terminate()
 
 
 if __name__ == "__main__":
