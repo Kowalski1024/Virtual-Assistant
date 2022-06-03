@@ -16,17 +16,26 @@ class ProcessTuple:
         self.obj = obj
         self.process = mp.Process()
 
-    def run(self):
+    def run(self) -> 'ProcessTuple':
+        """
+        Terminate process if is alive and create new process
+        """
         self.terminate()
 
         self.process = mp.Process(target=self.obj.run, daemon=True)
         self.process.start()
         return self
 
-    def is_alive(self):
+    def is_alive(self) -> bool:
+        """
+        Check if process is alive
+        """
         return self.process.is_alive()
 
-    def terminate(self):
+    def terminate(self) -> None:
+        """
+        Terminate process if is alive
+        """
         if self.is_alive():
             self.process.terminate()
             self.process.join()
@@ -42,7 +51,10 @@ class Assistant:
         self._graphical_interface = GUI(self.parent_connection)
         self.response_type = False
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Head function to run the assistant, starts all necessary threads and enters an infinite loop to manage the gui
+        """
         self._key_listener.start()
         self._graphical_interface.after(ms=20, func=self._response)
         self._graphical_interface.run()
@@ -50,7 +62,12 @@ class Assistant:
         self._speaker.stop_speaker()
         self.close_connection()
 
-    def wake_up(self):
+    def wake_up(self) -> None:
+        """
+        Start the skills matching process if there is an internet connection (otherwise a message will be displayed)
+        and the last process is not active.
+        If the last process is alive, the function will terminate only that process.
+        """
         from assistant.skills.collection.browser_skills import BrowserSkills
 
         self._graphical_interface.clear()
@@ -67,27 +84,42 @@ class Assistant:
 
     @property
     def parent_connection(self) -> mp.connection:
+        """
+        Return pipe connection on the parent side for communication with another process
+        """
         return self._pipe_connection[0]
 
     @property
     def child_connection(self) -> mp.connection:
+        """
+        Return pipe connection on the child side for communication with another process
+        """
         return self._pipe_connection[1]
 
     @property
-    def pipe(self):
+    def pipe(self) -> mp.connection:
+        """
+        Return duplex pipe connection for communication with another process
+        """
         return self._pipe_connection
 
-    def close_connection(self):
+    def close_connection(self) -> None:
+        """
+        Close pipe connection
+        """
         self._pipe_connection[0].close()
         self._pipe_connection[1].close()
 
-    def _response_by_type(self, response, clear=0):
+    def _response_by_type(self, response, clear=0) -> None:
+        # Create an audio or graphic response for user, depends on user preference
         if self.response_type:
             self._speaker.response_in_speech(response.message)
         else:
             self._graphical_interface.write(response.message, response.font, clear)
 
-    def _get_speech_input(self, response: Response):
+    def _get_speech_input(self, response: Response) -> None:
+        # Release lock from recognizer to get speech input from user,
+        # if there is a message to the user, it will be passed on to him
         if response.message:
             self._response_by_type(response, 2)
         with self._speaker.lock:
@@ -97,13 +129,15 @@ class Assistant:
                 return
             self._speaker.assistant_ready()
 
-    def _change_response_type(self, response):
+    def _change_response_type(self, response) -> None:
+        # Change response type to graphic or audio
         if response.message == 'voice':
             self.response_type = True
         else:
             self.response_type = False
 
-    def _response(self):
+    def _response(self) -> None:
+        # Process all data from pipe connection, every 20ms
         if self.parent_connection.poll():
             response: Response = self.parent_connection.recv()
             if response.type == ResponseType.WAITING_FOR_SPEECH_INPUT:

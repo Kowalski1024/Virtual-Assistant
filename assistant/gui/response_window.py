@@ -34,20 +34,61 @@ class ResponseWindow(tk.Frame):
         # pack widgets
         self._prepare()
 
-    def show_input_frame(self):
+    def show_input_frame(self) -> None:
+        """
+        Shows input frame
+        """
         self.stop_progress_bar()
         self.input_frame.tkraise()
         self.show()
 
-    def show_scrollable_frame(self):
+    def show_scrollable_frame(self) -> None:
+        """
+        Shows scrollable frame
+        """
         self.scrollable_frame.tkraise()
         self.show()
 
-    def _send_input_text(self, txt):
+    def start_progress_bar(self) -> None:
+        """
+        Starts progress bar thread
+        """
+        if self._progress_bar_thread.is_alive():
+            self.progress_bar['value'] = 0
+        else:
+            self._progress_bar_thread = Thread(target=self._step_progress_bar, daemon=True)
+            self._progress_bar_thread.start()
+
+    def stop_progress_bar(self) -> None:
+        """
+        Stops progress bar thread
+        """
+        if self._progress_bar_thread.is_alive():
+            self._progress_stop_flag = True
+            self._progress_bar_thread.join()
+
+    def hide(self) -> None:
+        """
+        Hides main window
+        """
+        self.master.withdraw()
+        self.input_frame.clear()
+        self.scrollable_frame.clear()
+
+    def show(self) -> None:
+        """
+        Shows main window
+        """
+        self.master.deiconify()
+
+    def _send_input_text(self, txt) -> None:
+        # Send text from the input frame via pipe
+
         self._pipe.send(Response(ResponseType.TEXT_RESPONSE, txt))
         self.hide()
 
-    def _step_progress_bar(self):
+    def _step_progress_bar(self) -> None:
+        # Manages a progress bar that hides the window after 10 seconds if the user doesn't click on the title bar
         self.progress_bar['value'] = 0
         while self.progress_bar['value'] != 100:
             self.progress_bar['value'] += 10
@@ -58,37 +99,23 @@ class ResponseWindow(tk.Frame):
                 return
         self.hide()
 
-    def start_progress_bar(self):
-        if self._progress_bar_thread.is_alive():
-            self.progress_bar['value'] = 0
-        else:
-            self._progress_bar_thread = Thread(target=self._step_progress_bar, daemon=True)
-            self._progress_bar_thread.start()
-
-    def stop_progress_bar(self):
-        if self._progress_bar_thread.is_alive():
-            self._progress_stop_flag = True
-
-    def hide(self):
-        self.master.withdraw()
-        self.input_frame.clear()
-        self.scrollable_frame.clear()
-
-    def show(self):
-        self.master.deiconify()
-
-    def _change_x_on_hovering(self, event):
+    def _change_x_on_hovering(self, event) -> None:
+        # Change exists button to red color
         self.close_button['bg'] = 'red'
 
-    def _return_x_to_normal_state(self, event):
+    def _return_x_to_normal_state(self, event) -> None:
+        # Chane exists button to normal color
         self.close_button['bg'] = colors.RGRAY
 
-    def _get_pos(self, event):
+    def _get_pos(self, event) -> None:
+        # Handling window move event
         def move_window(event):
+            # Helper for handling move event
             self.config(cursor="fleur")
             self.master.geometry(f'+{event.x_root + x_win}+{event.y_root + y_win}')
 
-        def release_window(event):
+        def release_window(event) -> None:
+            # Handling release event
             self.config(cursor="arrow")
 
         self.stop_progress_bar()
@@ -107,7 +134,8 @@ class ResponseWindow(tk.Frame):
         self.title_bar_title.bind('<B1-Motion>', move_window)
         self.title_bar_title.bind('<ButtonRelease-1>', release_window)
 
-    def _prepare(self):
+    def _prepare(self) -> None:
+        # Prepare tkinter GUI
         self.title_bar.pack(fill=tk.X)
         self.close_button.pack(side=tk.RIGHT, ipadx=7, ipady=1)
         self.title_bar_title.pack(side=tk.LEFT, padx=10)

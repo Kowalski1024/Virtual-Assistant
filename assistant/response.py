@@ -19,7 +19,7 @@ class Connection:
     def __init__(self, pipe: connection):
         self._pipe = pipe
 
-    def send(self, response_type: ResponseType, message: str = None, font: FontStyles = None):
+    def send(self, response_type: ResponseType, message: str = None, font: FontStyles = None) -> None:
         """
         Sending Response by pipe connection
         """

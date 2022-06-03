@@ -10,9 +10,13 @@ class InputFrame(tk.Frame):
         self._prepare_frame()
 
     def clear(self):
-        self.entry.delete(1, tk.END)
+        """
+        Clear entry widget
+        """
+        self.entry.delete(0, tk.END)
 
     def _prepare_frame(self):
+        # Prepare frame
         self.grid_rowconfigure(0, weight=1)
         self.grid_rowconfigure(3, weight=1)
         self.grid_columnconfigure(0, weight=1)

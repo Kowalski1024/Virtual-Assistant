@@ -18,10 +18,19 @@ class ScrollableTextFrame(tk.Frame):
         self._clear_flag = False
         self._prepare_fonts()
 
-    def clear(self):
+    def clear(self) -> None:
+        """
+        Clear text widget
+        """
         self.txt.delete(1.0, tk.END)
 
-    def add_text(self, text: str, font: FontStyles, clear):
+    def add_text(self, text: str, font: FontStyles, clear: int=0) -> None:
+        """
+        Add text to widget
+        :param text: text to display
+        :param font: font format
+        :param clear: 0 - do not clear, 1 - clear before printing, 2 - clear before next printing
+        """
         if clear == 1 or self._clear_flag:
             self.clear()
             self._clear_flag = False
@@ -29,6 +38,7 @@ class ScrollableTextFrame(tk.Frame):
             self._clear_flag = clear
         self.txt.insert(tk.END, text+"\n", font)
 
-    def _prepare_fonts(self):
+    def _prepare_fonts(self) -> None:
+        # Prepare frame
         for font in FontStyles:
             self.txt.tag_configure(font, font=font.value)

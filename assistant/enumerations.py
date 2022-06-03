@@ -2,6 +2,7 @@ import enum
 
 
 class ResponseType(enum.Enum):
+    # Connection status codes
     WAITING_FOR_TEXT_INPUT = 100
     WAITING_FOR_SPEECH_INPUT = 101
     RECOGNIZER_READY = 102
@@ -14,6 +15,7 @@ class ResponseType(enum.Enum):
 
 
 class FontStyles(enum.Enum):
+    # Font styles
     TITLE = 'Verdana', 12, 'bold', 'italic'
     BOLD = 'Verdana', 8, 'bold'
     NORMAL = 'Verdana', 8

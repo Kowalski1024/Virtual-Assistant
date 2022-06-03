@@ -13,7 +13,10 @@ class SkillMatching(Connection):
         self._tfid_vectorizer = TfidfVectorizer()
         self._skill_matrix = self._tfid_vectorizer.fit_transform([cmd[CMD.TAGS] for cmd in assistant_commands])
 
-    def run(self):
+    def run(self) -> None:
+        """
+        Runs skill matching, gets the input from the user as text and matches the assistant's existing skills
+        """
         skill = None
         while True:
             sentence = self.recv_from_speech()
@@ -38,7 +41,8 @@ class SkillMatching(Connection):
                 getattr(cls, skill[CMD.FUNC])()
                 break
 
-    def _find_best_match(self, sentence):
+    def _find_best_match(self, sentence) -> tuple[int, float]:
+        # Using cosine similarity returns best match of the input text to the assistant's command set
         similarities = cosine_similarity(self._skill_matrix, self._tfid_vectorizer.transform([sentence])).flatten()
         best_match_index = similarities.argmax()
         return best_match_index, similarities[best_match_index].round(2)
