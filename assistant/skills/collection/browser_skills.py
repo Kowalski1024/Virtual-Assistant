@@ -30,8 +30,8 @@ class BrowserSkills(Connection):
             *  open xxxx
         Limitations
             - If in the voice_transcript there are more than one commands_dict
-              e.g voice_transcript='open youtube and open netflix' the application will find
-              and execute only the first one, in our case will open the youtube.
+              e.g. voice_transcript='open YouTube and open Netflix' the application will find
+              and execute only the first one, in our case will open the YouTube.
             - Support ONLY the following top domains: '.com', '.org', '.net', '.int', '.edu', '.gov', '.mil', '.pl'
         """
         website = self.recv_from_speech('Enter website: ')

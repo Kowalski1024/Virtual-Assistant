@@ -27,24 +27,6 @@ class CalendarSkills(Connection):
         event.Save()
         event.Send()
 
-    def _get_event_data(self) -> Tuple:
-        # Gets from user start date, start hour, subject, duration and location of an event
-        event_start_date = self._get_date('Enter start date: ')
-        event_start_hour = self._get_hour('Enter start hour: ')
-        event_start_date = f'{event_start_date.strftime("%d/%m/%Y")} {event_start_hour}'
-
-        event_subject = self._get_text('Enter subject: ')
-
-        event_duration = self._get_text('Enter duration in minutes: ')
-
-        if not event_duration.isnumeric():
-            self.send(ResponseType.SKILL_FAIL, 'Duration time is not a number', FontStyles.NORMAL)
-            event_duration = 0
-
-        event_location = self._get_text('Enter location: ')
-
-        return event_start_date, event_subject, int(event_duration), event_location
-
     def display_events(self) -> None:
         """Gets start and end dates from user.
         Gets events from Outlook Calendar in given range
@@ -64,6 +46,24 @@ class CalendarSkills(Connection):
 
         message = self._create_message(select_items)
         self.send(ResponseType.TEXT_RESPONSE, message, FontStyles.NORMAL)
+
+    def _get_event_data(self) -> Tuple:
+        # Gets from user start date, start hour, subject, duration and location of an event
+        event_start_date = self._get_date('Enter start date: ')
+        event_start_hour = self._get_hour('Enter start hour: ')
+        event_start_date = f'{event_start_date.strftime("%d/%m/%Y")} {event_start_hour}'
+
+        event_subject = self._get_text('Enter subject: ')
+
+        event_duration = self._get_text('Enter duration in minutes: ')
+
+        if not event_duration.isnumeric():
+            self.send(ResponseType.SKILL_FAIL, 'Duration time is not a number', FontStyles.NORMAL)
+            event_duration = 0
+
+        event_location = self._get_text('Enter location: ')
+
+        return event_start_date, event_subject, int(event_duration), event_location
 
     def _get_date(self, text: str) -> datetime.date:
         # Gets date from user and returns datetime.date object from this date

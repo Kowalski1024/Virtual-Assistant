@@ -35,7 +35,7 @@ class ReminderSkills(Connection):
 
     def _create_reminder(self, remind_time: int) -> None:
         # Creates new thread
-        process = Thread(target=self.remind, args=(self._pipe, remind_time), daemon=True)
+        process = Thread(target=self._remind, args=(self._pipe, remind_time), daemon=True)
         process.start()
         process.run()
 
@@ -48,7 +48,7 @@ class ReminderSkills(Connection):
             return int(remind_time) * time_offsets[unit]
 
     @staticmethod
-    def remind(pipe, remind_time: int) -> None:
+    def _remind(pipe, remind_time: int) -> None:
         time.sleep(remind_time)
         pipe.send(Response(ResponseType.TEXT_RESPONSE, 'Time is up'))
 

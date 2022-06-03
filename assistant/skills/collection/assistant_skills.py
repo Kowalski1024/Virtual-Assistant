@@ -1,4 +1,3 @@
-from assistant.enumerations import FontStyles
 from assistant.response import ResponseType, Connection
 
 

@@ -38,7 +38,6 @@ class SkillMatching(Connection):
                 getattr(cls, skill[CMD.FUNC])()
                 break
 
-
     def _find_best_match(self, sentence):
         similarities = cosine_similarity(self._skill_matrix, self._tfid_vectorizer.transform([sentence])).flatten()
         best_match_index = similarities.argmax()
