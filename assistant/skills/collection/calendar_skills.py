@@ -35,9 +35,9 @@ class CalendarSkills(Connection):
         calender = outlook.GetDefaultFolder(9)
         items = calender.Items
 
-        start_date = self._get_date('Enter start date: ')
+        start_date = self._get_date('Say start date')
 
-        end_date = self._get_date('Enter end date: ')
+        end_date = self._get_date('Say end date')
 
         select_items = []
         for item in items:
@@ -49,19 +49,19 @@ class CalendarSkills(Connection):
 
     def _get_event_data(self) -> Tuple:
         # Gets from user start date, start hour, subject, duration and location of an event
-        event_start_date = self._get_date('Enter start date: ')
-        event_start_hour = self._get_hour('Enter start hour: ')
+        event_start_date = self._get_date('Say start date')
+        event_start_hour = self._get_hour('Say start hour: ')
         event_start_date = f'{event_start_date.strftime("%d/%m/%Y")} {event_start_hour}'
 
-        event_subject = self._get_text('Enter subject: ')
+        event_subject = self._get_text('Say subject')
 
-        event_duration = self._get_text('Enter duration in minutes: ')
+        event_duration = self._get_text('Say duration in minutes: ')
 
         if not event_duration.isnumeric():
             self.send(ResponseType.SKILL_FAIL, 'Duration time is not a number', FontStyles.NORMAL)
             event_duration = 0
 
-        event_location = self._get_text('Enter location: ')
+        event_location = self._get_text('Say location')
 
         return event_start_date, event_subject, int(event_duration), event_location
 
