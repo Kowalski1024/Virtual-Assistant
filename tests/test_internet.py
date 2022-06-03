@@ -2,16 +2,10 @@ import unittest
 from unittest import mock
 from pynput import keyboard
 
-from src.skills.collection.browser_skills import BrowserSkills
+from assistant.skills.collection.browser_skills import BrowserSkills
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
-
-
-def test_startup(key_listener_asset, method):
-    process = Process(target=method, daemon=True)
-    process.start()
-    data: Response = key_listener_asset.parent.recv()
-    key_listener_asset.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+from assistant.response import ResponseType, Response
+from assistant.tests.test_assistant_cls import internet_connectivity_check
 
 
 class InternetTests(unittest.TestCase):
@@ -20,30 +14,89 @@ class InternetTests(unittest.TestCase):
         self.internet_cls = BrowserSkills(self.child)
         return super().setUp()
 
+    def tearDown(self) -> None:
+        self.parent.close()
+        self.child.close()
+
     def test_wikipedia(self):
-        test_startup(self, self.internet_cls.wikipedia)
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.wikipedia, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'Tokyo'))
         data: Response = self.parent.recv()
         self.assertEqual('Tokyo', data.message)
+        process.terminate()
+
+    def test_wikipedia_cannot_find_keyword(self):
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.wikipedia, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, ''))
+        data: Response = self.parent.recv()
+        self.assertEqual('Cannot find given keyword', data.message)
+        process.terminate()
 
     def test_google_search(self):
-        test_startup(self, self.internet_cls.search_on_google)
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.search_on_google, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'Tokyo'))
         data: Response = self.parent.recv()
         self.assertEqual('Phrase searched', data.message)
+        process.terminate()
+
 
     def test_open_website_in_browser(self):
-        test_startup(self, self.internet_cls.open_website_in_browser)
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.open_website_in_browser, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'youtube'))
         data: Response = self.parent.recv()
         self.assertEqual('Browser opened', data.message)
+        process.terminate()
 
     def test_synonym_search(self):
-        test_startup(self, self.internet_cls.show_synonyms)
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.show_synonyms, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
         self.parent.send(Response(ResponseType.TEXT_RESPONSE, 'yes'))
         synonyms = "['agree', 'aye', 'consent', 'nod', 'yea', 'affirmative', 'all right']"
         data: Response = self.parent.recv()
         self.assertTrue(all(x in synonyms for x in data.message), "Couldn't find synonyms")
+        process.terminate()
+
+    def test_synonym_search_empty(self):
+        self.assertTrue(internet_connectivity_check(), 'No internet connection')
+
+        process = Process(target=self.internet_cls.show_synonyms, daemon=True)
+        process.start()
+        data: Response = self.parent.recv()
+        self.assertIs(ResponseType.WAITING_FOR_SPEECH_INPUT, data.type)
+
+        self.parent.send(Response(ResponseType.TEXT_RESPONSE, ''))
+        data: Response = self.parent.recv()
+        self.assertTrue(data.message, "Couldn't find synonyms")
+        process.terminate()
 
 
 if __name__ == "__main__":
