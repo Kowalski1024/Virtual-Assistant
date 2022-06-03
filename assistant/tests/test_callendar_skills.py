@@ -1,11 +1,12 @@
 import unittest
-from src.skills.collection.calendar_skills import CalendarSkills
+from assistant.skills.collection.calendar_skills import CalendarSkills
 from multiprocessing import Pipe, Process
-from src.response import ResponseType, Response
+from assistant.response import ResponseType, Response
 
 expected_result = 'Subject: empty\nPlace: Cracow\nStart time: 2022-08-29 20:00:00+00:00\nEnd time: 2022-08-29 ' \
                   '20:20:00+00:00\nText: \nSubject: empty\nPlace: Cracow\nStart time: 2022-08-30 21:00:00+00:00\nEnd ' \
                   'time: 2022-08-30 21:25:00+00:00\nText: '
+
 
 class CalendarTests(unittest.TestCase):
     def setUp(self) -> None:
