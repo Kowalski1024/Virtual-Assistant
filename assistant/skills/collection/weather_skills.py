@@ -15,7 +15,7 @@ class WeatherSkills(Connection):
     async def _check_weather(self) -> None:
         # Gets input from user and make a request for api to get weather for given city
         client = python_weather.Client()
-        city = self.recv_from_speech('Enter city: ')
+        city = self.recv_from_speech('Say city name')
 
         try:
             weather = await client.find(city)
