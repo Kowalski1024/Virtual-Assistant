@@ -69,10 +69,10 @@ Below is a list of voice commands that activate a specific assistant skill. All 
 1. `wikipedia` - searches given keyword on Wikipedia
 2. `open` - opens a web page in the browser
 3. `search` - opens google.com with search results for given keyword
-4. `synonyms` - display synonyms for the word the user specified
+4. `synonyms` - displays synonyms for the word the user specified
 
 #### Weather skills
-1. `weather` - get weather for given city
+1. `weather` - gets weather for given city
 
 #### Reminder skills
 1. `remind` - creates a simple reminder for the given time interval (seconds or minutes or hours)
