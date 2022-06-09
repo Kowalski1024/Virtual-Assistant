@@ -49,7 +49,7 @@ class CalendarSkills(Connection):
 
     def _get_event_data(self) -> Tuple:
         # Gets from user start date, start hour, subject, duration and location of an event
-        event_start_date = self._get_date('Say start date')
+        event_start_date = self._get_date('Say start date: ')
         event_start_hour = self._get_hour('Say start hour: ')
         event_start_date = f'{event_start_date.strftime("%d/%m/%Y")} {event_start_hour}'
 
@@ -67,22 +67,22 @@ class CalendarSkills(Connection):
 
     def _get_date(self, text: str) -> datetime.date:
         # Gets date from user and returns datetime.date object from this date
-        date_text = self.recv_from_speech(text)
-        date = None
-        try:
+        while True:
+            date_text = self.recv_from_speech(text)
             date = self._convert_to_date(date_text)
-        except Exception as e:
+            if date:
+                break
             self.send(ResponseType.SKILL_FAIL, 'Wrong date', FontStyles.NORMAL)
             
         return date
 
     def _get_hour(self, text: str) -> str:
         # Gets hour from user and returns hour in specific format
-        hour_text = self.recv_from_speech(text)
-        hour = None
-        try:
+        while True:
+            hour_text = self.recv_from_speech(text)
             hour = self._convert_to_hour(hour_text)
-        except Exception as e:
+            if hour:
+                break
             self.send(ResponseType.SKILL_FAIL, 'Wrong hour', FontStyles.NORMAL)
 
         return hour
@@ -94,16 +94,23 @@ class CalendarSkills(Connection):
         return text
 
     @staticmethod
-    def _convert_to_date(date_text: str) -> datetime.date:
+    def _convert_to_date(date_text: str):
         # Converts date from string to datetime.date type
         date_text = date_text.strip()
-        return dateutil.parser.parse(date_text).date()
+        try:
+            return dateutil.parser.parse(date_text).date()
+        except Exception as E:
+            return None
 
     @staticmethod
-    def _convert_to_hour(hour_text: str) -> str:
+    def _convert_to_hour(hour_text: str):
         # Converts hour given as string to specific format
         hour_text = hour_text.strip()
-        return f'{dateutil.parser.parse(hour_text).hour}:{dateutil.parser.parse(hour_text).minute}'
+        try:
+            return f'{dateutil.parser.parse(hour_text).hour}:{dateutil.parser.parse(hour_text).minute}'
+        except Exception as e:
+            return None
+
 
     @staticmethod
     def _create_message(events_items: List) -> str:
