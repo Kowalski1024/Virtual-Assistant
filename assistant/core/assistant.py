@@ -148,7 +148,8 @@ class Assistant:
                 self._change_response_type(response)
             elif response.type == ResponseType.TEXT_RESPONSE:
                 self._response_by_type(response)
-            elif response.type in {ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR, ResponseType.FAIL_MATCH}:
+            elif response.type in {ResponseType.SPEECH_FAIL, ResponseType.SPEECH_ERROR, ResponseType.FAIL_MATCH,
+                                   ResponseType.SKILL_FAIL}:
                 self._response_by_type(response, clear=2)
 
         self._graphical_interface.after(ms=20, func=self._response)
