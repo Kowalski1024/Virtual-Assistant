@@ -58,8 +58,8 @@ the assistant is waiting for speech input.
 ### Assistant's skills
 
 Below is a list of voice commands that activate a specific assistant skill. All skills can be found in the
-[registry.py](assistant/skills/registry.py) file, and more information on how they work can be found in the 
-[collection dictionary](assistant/skills/collection).
+[registry.py](assistant_archive/skills/registry.py) file, and more information on how they work can be found in the 
+[collection dictionary](assistant_archive/skills/collection).
 
 #### Assistant skills
 1. `voice` - changes the assistant's replay mode to voice
