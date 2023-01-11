@@ -16,7 +16,11 @@ class Recognizer(metaclass=Singleton):
             logger.info("Start listening...")
             audio = self._microphone()
             logger.info("Listening completed")
-        return self._recognizer.transcribe(audio)
+
+        text = self._recognizer.transcribe(audio)
+        logger.info(f"Transcribe result: {text}")
+
+        return text
 
     def _microphone(self):
         return self._recognizer.microphone()
