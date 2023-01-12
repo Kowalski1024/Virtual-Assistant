@@ -1,3 +1,4 @@
+from typing import MutableMapping
 import re
 
 import dateutil.parser
@@ -6,7 +7,7 @@ from assistant.handlers.handler_base import VoiceHandlerBase
 
 
 class DateHandler(VoiceHandlerBase):
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -23,7 +24,7 @@ class DateHandler(VoiceHandlerBase):
 
 
 class ClockTimeHandler(VoiceHandlerBase):
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -41,7 +42,7 @@ class ClockTimeHandler(VoiceHandlerBase):
 
 
 class DurationHandler(VoiceHandlerBase):
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -50,10 +51,16 @@ class DurationHandler(VoiceHandlerBase):
 
             hours = int(hours) if hours else 0
             minutes = int(minutes) if minutes else 0
-            request['duration'] = hours*60 + minutes
 
         except (ValueError, IndexError):
             raise ValueError(f"Can't parse {text}")
+
+        duration_minutes = hours * 60 + minutes
+
+        if duration_minutes <= 0:
+            raise ValueError("Duration mustn't be zero")
+
+        request['duration'] = duration_minutes
 
         return request
 
@@ -63,7 +70,7 @@ class DurationHandler(VoiceHandlerBase):
 
 
 class LocationHandler(VoiceHandlerBase):
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
 
         if text != 'pass':
@@ -80,7 +87,7 @@ class TextHandler(VoiceHandlerBase):
     def __init__(self, description=None):
         self._desc = description if description else 'Say something'
 
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
 
         if text != 'pass':
@@ -94,7 +101,7 @@ class TextHandler(VoiceHandlerBase):
 
 
 class OptionalTextHandler(VoiceHandlerBase):
-    def handle(self, request: dict) -> dict:
+    def handle(self, request: MutableMapping) -> MutableMapping:
         text = self._recognizer.transcribe()
 
         if text != 'pass':

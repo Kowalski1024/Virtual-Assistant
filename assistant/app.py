@@ -1,19 +1,30 @@
 import customtkinter as ctk
 import tkinter as tk
 
+from assistant.view import GUI
+
 
 class App(ctk.CTk):
     def __init__(self):
         super().__init__()
 
-        self.title('Tkinter MVC Demo')
-        self.geometry("400x240")
+        w = 300  # width for the Tk root
+        h = 400  # height for the Tk root
 
-        button = ctk.CTkButton(master=self, text="CTkButton", command=button_function)
-        button.place(relx=0.5, rely=0.5, anchor=tk.CENTER)
+        # get screen width and height
+        ws = self.winfo_screenwidth()  # width of the screen
+        hs = self.winfo_screenheight()  # height of the screen
 
-def button_function():
-    print("button pressed")
+        # calculate x and y coordinates for the Tk root window
+        x = (ws - ws / 12) - (w / 2)
+        y = (hs - hs / 5) - (h / 2)
+        self.geometry('%dx%d+%d+%d' % (w, h, x, y))
+        self.title('Virtual Assistant')
+        self.attributes("-topmost", True)
+        self.minsize(width=280, height=300)
+
+        view = GUI(self)
+        view.pack(fill=tk.BOTH, expand=1)
 
 
 if __name__ == '__main__':
