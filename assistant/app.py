@@ -2,6 +2,7 @@ import customtkinter as ctk
 import tkinter as tk
 
 from assistant.view import GUI
+from assistant.controller import Controller
 
 
 class App(ctk.CTk):
@@ -25,6 +26,14 @@ class App(ctk.CTk):
 
         view = GUI(self)
         view.pack(fill=tk.BOTH, expand=1)
+
+        controller = Controller(view=view, model=None)
+        view.set_controller(controller)
+
+        self.bind('<Control-q>', self.activate)
+
+    def activate(self, event):
+        print('XD')
 
 
 if __name__ == '__main__':

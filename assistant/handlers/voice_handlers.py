@@ -1,13 +1,24 @@
 from typing import MutableMapping
 import re
 
+from loguru import logger
 import dateutil.parser
 
 from assistant.handlers.handler_base import VoiceHandlerBase
 
 
+__all__ = [
+    'DateHandler',
+    'ClockTimeHandler',
+    'DurationHandler',
+    'TextHandler',
+]
+
+
 class DateHandler(VoiceHandlerBase):
     def handle(self, request: MutableMapping) -> MutableMapping:
+        logger.info('Waiting for input...')
+
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -25,6 +36,8 @@ class DateHandler(VoiceHandlerBase):
 
 class ClockTimeHandler(VoiceHandlerBase):
     def handle(self, request: MutableMapping) -> MutableMapping:
+        logger.info('Waiting for input')
+
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -43,6 +56,8 @@ class ClockTimeHandler(VoiceHandlerBase):
 
 class DurationHandler(VoiceHandlerBase):
     def handle(self, request: MutableMapping) -> MutableMapping:
+        logger.info('Waiting for input')
+
         text = self._recognizer.transcribe()
         text = f' {text} '.replace(' one ', '1')
 
@@ -69,49 +84,25 @@ class DurationHandler(VoiceHandlerBase):
         return 'Specify duration in hours or/and minutes'
 
 
-class LocationHandler(VoiceHandlerBase):
-    def handle(self, request: MutableMapping) -> MutableMapping:
-        text = self._recognizer.transcribe()
-
-        if text != 'pass':
-            request['location'] = text
-
-        return request
-
-    @property
-    def description(self):
-        return 'Specify location or say pass to skip'
-
-
 class TextHandler(VoiceHandlerBase):
-    def __init__(self, description=None):
-        self._desc = description if description else 'Say something'
+    def __init__(self, name='text', description='Say something', optional=False):
+        self._name = name
+        self._desc = description if not optional else f'{description} or say pass to skip'
+        self._optional = optional
 
     def handle(self, request: MutableMapping) -> MutableMapping:
+        logger.info('Waiting for input')
+
         text = self._recognizer.transcribe()
 
-        if text != 'pass':
-            request['text'] = text
+        if self._optional and text == 'pass':
+            request[self._name] = ''
+            return request
+
+        request[self._name] = text
 
         return request
 
     @property
     def description(self):
         return self._desc
-
-
-class OptionalTextHandler(VoiceHandlerBase):
-    def handle(self, request: MutableMapping) -> MutableMapping:
-        text = self._recognizer.transcribe()
-
-        if text != 'pass':
-            request['text'] = text
-
-        return request
-
-    @property
-    def description(self):
-        return 'Say something or say pass to skip'
-
-
-

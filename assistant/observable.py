@@ -14,7 +14,7 @@ _VT_co = TypeVar('_VT_co', covariant=True)
 
 
 class Observer(Protocol):
-    def update(self, data) -> None:
+    def update_observer(self, data) -> None:
         ...
 
 
@@ -33,13 +33,13 @@ class MutableMappingMixin(MutableMapping[_KT, _VT]):
         super().__setitem__(__k, __v)
 
         for observer in self._observers:
-            observer.update(self)
+            observer.update_observer(self)
 
     def __delitem__(self, __v: _KT) -> None:
         super().__getitem__(__v)
 
         for observer in self._observers:
-            observer.update(self)
+            observer.update_observer(self)
 
     def __getitem__(self, __k: _KT) -> _VT_co:
         return super().__getitem__(__k)

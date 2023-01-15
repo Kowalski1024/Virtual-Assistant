@@ -9,6 +9,7 @@ class Recognizer(metaclass=Singleton):
         self._recognizer: RecognizerBase | None = None
 
     def set_recognizer(self, recognizer: RecognizerBase):
+        logger.info(f"Set recognizer to {recognizer}")
         self._recognizer = recognizer
 
     def transcribe(self, audio=None) -> str:

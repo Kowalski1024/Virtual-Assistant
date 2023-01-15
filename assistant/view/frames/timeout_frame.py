@@ -13,7 +13,7 @@ class TimeoutFrame(ctk.CTkFrame):
 
         self.progressbar = ctk.CTkProgressBar(master=self, determinate_speed=0.1)
         self.progressbar.grid(row=0, column=0, padx=10, pady=10, sticky=tk.W + tk.E)
-        self.set(0)
+        self.set(100)
 
     def set(self, value):
         self.progressbar.set(value)

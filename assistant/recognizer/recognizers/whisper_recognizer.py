@@ -11,7 +11,7 @@ from assistant.recognizer.recognizers.recognizer_base import RecognizerBase
 class WhisperRecognizer(RecognizerBase):
     def __init__(self):
         super().__init__()
-        self.model = whisper.load_model('base.en', in_memory=True)
+        self.model = whisper.load_model('base.en', in_memory=False)
         self.normalizer = EnglishTextNormalizer()
         self.temp_file = NamedTemporaryFile().name
 
@@ -27,3 +27,6 @@ class WhisperRecognizer(RecognizerBase):
             f.write(wav_data.read())
 
         return self.temp_file
+
+    def __str__(self):
+        return "Whisper"
