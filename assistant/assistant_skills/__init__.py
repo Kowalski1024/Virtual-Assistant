@@ -1,1 +1,1 @@
-from assistant.assistant_skills.registry import SKILLS
+from assistant.assistant_skills.command import *

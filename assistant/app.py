@@ -1,8 +1,11 @@
+from datetime import datetime
+
 import customtkinter as ctk
 import tkinter as tk
 
 from assistant.view import GUI
 from assistant.controller import Controller
+from assistant.model import ReminderModel
 
 
 class App(ctk.CTk):
@@ -27,8 +30,9 @@ class App(ctk.CTk):
         view = GUI(self)
         view.pack(fill=tk.BOTH, expand=1)
 
-        controller = Controller(view=view, model=None)
+        controller = Controller(view=view, model=ReminderModel())
         view.set_controller(controller)
+        view.show_reminders()
 
         self.bind('<Control-q>', self.activate)
 

@@ -1,4 +1,4 @@
-from typing import Callable, Iterable
+from typing import Iterable
 
 from loguru import logger
 from sklearn.feature_extraction.text import TfidfVectorizer
@@ -6,19 +6,33 @@ from sklearn.metrics.pairwise import cosine_similarity
 
 from assistant.view import GUI
 from assistant.recognizer import Recognizer, WhisperRecognizer, GoogleRecognizer
-from assistant.assistant_skills import SKILLS
+from assistant.assistant_skills.command import *
+from assistant.assistant_skills.skills import Skills
 from assistant.observable import ObservableDict
+from assistant.model import ReminderModel
 
 
 class Controller:
-    def __init__(self, view: GUI, model):
+    def __init__(self, view: GUI, model: ReminderModel):
         self._view = view
         self._model = model
+        self._skills = Skills()
 
         self._cancel = False
 
         self._recognizer = Recognizer()
-        self._skill_matching = SkillMatching(skill for skill, func in SKILLS)
+
+        self._commands: dict[str, Command] = {
+            'create event': CreateEvent().configure(self._skills),
+            'calendar events': CalendarEvents().configure(self._skills, hide=False),
+            'search': Search().configure(self._skills),
+            'wikipedia': Wikipedia().configure(self._skills, hide=False),
+            'synonyms': Synonyms().configure(self._skills, hide=False),
+            'weather': Weather().configure(self._skills, hide=False),
+            'create reminder': Reminder().configure(self._skills)
+        }
+
+        self._skill_matching = SkillMatching(self._commands)
 
         self._available_recognizers = {
             'Whisper': WhisperRecognizer(),
@@ -39,29 +53,27 @@ class Controller:
 
     def activate(self):
         self._view.prepare_gui()
-        skill = self.find_skill()
+        command = self.find_skill()
 
-        if skill is None:
+        if command is None:
             self._view.clear_gui()
             return
-
-        name, func = skill
-        self._view.set_bottom_text(name)
 
         data = ObservableDict()
         data.register(self._view.text_frame)
 
-        for description in func(data):
+        for description in command.execute(data=data):
             if self._cancel:
                 logger.info("Skill deactivated")
                 self._cancel = False
                 break
 
-            self._view.set_menu_text(description)
+            self._view.menu_frame.set_info_bar(description)
 
-        self._view.clear_gui()
+        if command.hide:
+            self._view.clear_gui()
 
-    def find_skill(self):
+    def find_skill(self) -> Command | None:
         while True:
             if self._cancel:
                 logger.info("Skill deactivated")
@@ -71,31 +83,36 @@ class Controller:
             try:
                 sentence = self._recognizer.transcribe()
             except ValueError as e:
-                self._view.set_menu_text(f'{e}')
+                self._view.menu_frame.set_info_bar(f'{e}')
             else:
                 break
 
-        best, similarity = self._skill_matching.find_best_match(sentence)
-        skill = SKILLS[best]
+        command_name, similarity = self._skill_matching.find_best_match(sentence)
+        command = self._commands[command_name]
 
         if similarity < 0.7:
-            self._view.set_menu_text(f"Sorry no match for \"{sentence}\", please repeat.")
+            self._view.menu_frame.set_info_bar(f"Sorry no match for \"{sentence}\", please repeat.")
         else:
-            self._view.set_menu_text(f"Chosen '{skill[0]}'")
+            self._view.menu_frame.set_info_bar(f"Chosen '{command_name}'")
 
+        self._view.bottom_frame.configure(text=command_name.upper())
         self._view.show()
 
-        return skill
+        return command
+
+    def get_reminders(self):
+        return self._model.reminders_now()
 
 
 class SkillMatching:
     def __init__(self, skills: Iterable[str]):
+        self._skills = list(skills)
         self._tfid_vectorizer = TfidfVectorizer()
-        self._skill_matrix = self._tfid_vectorizer.fit_transform(skills)
+        self._skill_matrix = self._tfid_vectorizer.fit_transform(self._skills)
 
-    def find_best_match(self, sentence) -> tuple[int, float]:
+    def find_best_match(self, sentence) -> tuple[str, float]:
         # Using cosine similarity returns best match of the input text to the assistant_archive's command set
         similarities = cosine_similarity(self._skill_matrix, self._tfid_vectorizer.transform([sentence])).flatten()
         best_match_index = similarities.argmax()
 
-        return best_match_index, similarities[best_match_index].round(2)
+        return self._skills[best_match_index], similarities[best_match_index].round(2)

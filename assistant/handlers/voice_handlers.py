@@ -16,6 +16,9 @@ __all__ = [
 
 
 class DateHandler(VoiceHandlerBase):
+    def __init__(self, key: str = 'date', description='Specify date'):
+        super().__init__(key, description=description)
+
     def handle(self, request: MutableMapping) -> MutableMapping:
         logger.info('Waiting for input...')
 
@@ -23,18 +26,17 @@ class DateHandler(VoiceHandlerBase):
         text = f' {text} '.replace(' one ', '1')
 
         try:
-            request['date'] = dateutil.parser.parse(text.strip()).date()
+            request[self._key] = dateutil.parser.parse(text.strip()).date()
         except dateutil.parser.ParserError:
             raise ValueError(f"Can't parse {text}")
 
         return request
 
-    @property
-    def description(self):
-        return 'Specify date'
-
 
 class ClockTimeHandler(VoiceHandlerBase):
+    def __init__(self, description='Specify the clock time'):
+        super().__init__(description=description)
+
     def handle(self, request: MutableMapping) -> MutableMapping:
         logger.info('Waiting for input')
 
@@ -49,12 +51,11 @@ class ClockTimeHandler(VoiceHandlerBase):
 
         return request
 
-    @property
-    def description(self):
-        return 'Specify the clock time'
-
 
 class DurationHandler(VoiceHandlerBase):
+    def __init__(self, description='Specify duration in hours or/and minutes'):
+        super().__init__(description=description)
+
     def handle(self, request: MutableMapping) -> MutableMapping:
         logger.info('Waiting for input')
 
@@ -79,14 +80,10 @@ class DurationHandler(VoiceHandlerBase):
 
         return request
 
-    @property
-    def description(self):
-        return 'Specify duration in hours or/and minutes'
-
 
 class TextHandler(VoiceHandlerBase):
-    def __init__(self, name='text', description='Say something', optional=False):
-        self._name = name
+    def __init__(self, key='text', description='Say something', optional=False):
+        super().__init__(key, description)
         self._desc = description if not optional else f'{description} or say pass to skip'
         self._optional = optional
 
@@ -96,13 +93,9 @@ class TextHandler(VoiceHandlerBase):
         text = self._recognizer.transcribe()
 
         if self._optional and text == 'pass':
-            request[self._name] = ''
+            request[self._key] = ''
             return request
 
-        request[self._name] = text
+        request[self._key] = text
 
         return request
-
-    @property
-    def description(self):
-        return self._desc
