@@ -90,7 +90,7 @@ class Controller:
         command_name, similarity = self._skill_matching.find_best_match(sentence)
         command = self._commands[command_name]
 
-        if similarity < 0.7:
+        if similarity < 0.9:
             self._view.menu_frame.set_info_bar(f"Sorry no match for \"{sentence}\", please repeat.")
         else:
             self._view.menu_frame.set_info_bar(f"Chosen '{command_name}'")

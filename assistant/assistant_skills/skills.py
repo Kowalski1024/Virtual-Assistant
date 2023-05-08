@@ -170,14 +170,17 @@ class Skills(metaclass=Singleton):
 
     def create_reminder(self, data: ObservableDict) -> Iterator[str]:
         chain = [
-            DurationHandler()
+            DurationHandler(),
+            TextHandler(key='text', description='Say something', optional=True)
         ]
 
         yield from self._iterate(chain, data)
 
         duration = data['duration']
-        reminder = ReminderModel.from_duration(minutes=duration, message='xd')
-        print(reminder)
+        text = data['text']
+
+        reminder = ReminderModel.from_duration(minutes=duration, message=text)
+
         reminder.save()
 
 

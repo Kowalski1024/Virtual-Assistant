@@ -23,7 +23,7 @@ class DateHandler(VoiceHandlerBase):
         logger.info('Waiting for input...')
 
         text = self._recognizer.transcribe()
-        text = f' {text} '.replace(' one ', '1')
+        text = f' {text} '.replace(' one ', ' 1 ')
 
         try:
             request[self._key] = dateutil.parser.parse(text.strip()).date()
@@ -41,7 +41,7 @@ class ClockTimeHandler(VoiceHandlerBase):
         logger.info('Waiting for input')
 
         text = self._recognizer.transcribe()
-        text = f' {text} '.replace(' one ', '1')
+        text = f' {text} '.replace(' one ', ' 1 ')
 
         try:
             request['hour'] = dateutil.parser.parse(text.strip()).hour
@@ -60,7 +60,7 @@ class DurationHandler(VoiceHandlerBase):
         logger.info('Waiting for input')
 
         text = self._recognizer.transcribe()
-        text = f' {text} '.replace(' one ', '1')
+        text = f' {text} '.replace(' one ', ' 1 ')
 
         try:
             hours, minutes = re.findall(r'([0-9]+) hour?|([0-9]+) minute?', text)[0]

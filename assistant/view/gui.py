@@ -36,8 +36,8 @@ class GUI(ctk.CTkFrame):
 
     def prepare_gui(self):
         self.text_frame.clear()
-        self.set_bottom_text('')
-        self.set_menu_text('Waiting for command')
+        self.bottom_frame.configure(text='')
+        self.menu_frame.set_info_bar('Waiting for command')
         self._menu_frame.show_cancel()
         self.show()
 

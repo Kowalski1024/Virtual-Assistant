@@ -33,34 +33,34 @@ class Command:
 
 class CreateEvent(Command):
     def execute(self, **kwargs):
-        self.receiver.create_event_in_calendar(**kwargs)
+        yield from self.receiver.create_event_in_calendar(**kwargs)
 
 
 class CalendarEvents(Command):
     def execute(self, **kwargs):
-        self.receiver.google_search(**kwargs)
+        yield from self.receiver.google_search(**kwargs)
 
 
 class Wikipedia(Command):
     def execute(self, **kwargs):
-        self.receiver.wikipedia(**kwargs)
+        yield from self.receiver.wikipedia(**kwargs)
 
 
 class Search(Command):
     def execute(self, **kwargs):
-        self.receiver.google_search(**kwargs)
+        yield from self.receiver.google_search(**kwargs)
 
 
 class Synonyms(Command):
     def execute(self, **kwargs):
-        self.receiver.synonyms(**kwargs)
+        yield from self.receiver.synonyms(**kwargs)
 
 
 class Weather(Command):
     def execute(self, **kwargs):
-        self.receiver.weather(**kwargs)
+        yield from self.receiver.weather(**kwargs)
 
 
 class Reminder(Command):
     def execute(self, **kwargs):
-        self.receiver.create_reminder(**kwargs)
+        yield from self.receiver.create_reminder(**kwargs)
